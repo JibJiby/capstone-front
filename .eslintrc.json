@@ -1,0 +1,24 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,    // js 문법 버전
+    "sourceType": "module",     // 모듈 시스템 종류 정함.
+    "ecmaFeatures": {
+        "jsx": true  // jsx 사용함.
+    }
+},
+"env": {
+    "browser": true,  // 브라우저에서 돌아감.
+    "node": true,     // 노드에서 돌아감.
+},
+  "extends": [
+    "plugin:@typescript-eslint/recommended", 
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "next/core-web-vitals"
+  ],
+  "plugins": [
+    "import",
+    "react-hooks",
+],
+}
