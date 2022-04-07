@@ -16,6 +16,7 @@ export const globalStyles = (
             body,
             #__next {
                 height: 100%;
+                font-family: 'Noto Sans KR', sans-serif;
             }
 
             :root {

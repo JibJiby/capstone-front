@@ -10,6 +10,7 @@ function Header() {
                 position: 'fixed',
                 width: '100%',
                 height: '60px',
+                backgroundColor: '#e9ecef',
 
                 display: 'flex',
                 justifyContent: 'center',
