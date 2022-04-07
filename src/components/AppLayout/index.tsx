@@ -1,3 +1,4 @@
+import Header from '@components/Header'
 import { css } from '@emotion/react'
 import { contentStyle } from './styles'
 
@@ -8,16 +9,9 @@ interface Props {
 const AppLayout = ({ children }: Props) => {
     return (
         <>
-            <header
-                css={css`
-                    height: 80px;
-                    background-color: tomato;
-                    display: flex;
-                `}
-            >
-                헤더
-            </header>
-            <div css={contentStyle}>{children}</div>
+            <Header />
+            <div style={{ height: '60px' }}></div>
+            <div>{children}</div>
         </>
     )
 }

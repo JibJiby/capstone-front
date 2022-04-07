@@ -17,6 +17,10 @@ export const globalStyles = (
             #__next {
                 height: 100%;
             }
+
+            :root {
+                --navbar-height: 60px;
+            }
         `}
     />
 )
