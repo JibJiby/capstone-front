@@ -32,9 +32,10 @@ const First: NextPage = () => {
                         // https://studiomeal.com/archives/533
                         display: 'grid',
 
-                        gridTemplateColumns: 'repeat(4, 220px)',
+                        gridTemplateColumns: 'repeat(4, 180px)',
                         // gridTemplateRows: 'repeat(auto-fill, 300px)',
 
+                        columnGap: '70px',
                         rowGap: '50px',
                     }}
                 >
