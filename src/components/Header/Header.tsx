@@ -40,8 +40,18 @@ function Header() {
                     <Image src="/logo.svg" width={100} height={50} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <div style={{ marginRight: '20px', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        메뉴
+                    <div
+                        style={{
+                            marginRight: '40px',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            fontWeight: 'bold',
+
+                            cursor: 'pointer',
+                        }}
+                    >
+                        베스트셀러
                     </div>
                     <div
                         style={{
