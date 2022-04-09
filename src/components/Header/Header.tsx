@@ -1,8 +1,10 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 function Header() {
     const router = useRouter()
+    const [isLogin, setLogin] = useState(false)
 
     return (
         <div
@@ -16,6 +18,7 @@ function Header() {
                 justifyContent: 'center',
 
                 userSelect: 'none',
+                zIndex: 100, // brightness가 위로 올라가기 때문에
             }}
         >
             <div
@@ -53,13 +56,22 @@ function Header() {
                     >
                         베스트셀러
                     </div>
-                    <div
-                        style={{
-                            cursor: 'pointer',
-                        }}
-                    >
-                        <Image src="/user-icon.png" width={32} height={32} />
-                    </div>
+                    {isLogin ? (
+                        <div onClick={() => setLogin(!isLogin)} style={{ fontWeight: 'bold', cursor: 'pointer' }}>
+                            로그인
+                        </div>
+                    ) : (
+                        <div
+                            style={{
+                                cursor: 'pointer',
+                            }}
+                            onClick={() => {
+                                setLogin(!isLogin)
+                            }}
+                        >
+                            <Image src="/user-icon.png" width={32} height={32} />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

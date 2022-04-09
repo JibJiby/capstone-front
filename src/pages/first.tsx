@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 const First: NextPage = () => {
     const [count, setCount] = useState(0)
+    const [checked, setChecked] = useState<Array<number>>([])
 
     return (
         <AppLayout>
@@ -57,15 +58,27 @@ const First: NextPage = () => {
                     {/* https://heeyamsec.tistory.com/37 */}
                     {bookImage.map((v, i) => (
                         <div
-                            style={{ cursor: 'pointer' }}
+                            style={{
+                                cursor: 'pointer',
+                                // backgroundColor: checked.includes(i) ? 'yellow' : 'initial'
+                            }}
                             key={i}
                             onClick={() => {
-                                if (count < 10) {
+                                if (checked.includes(i)) {
+                                    setChecked([...checked.filter((v) => v !== i)])
+                                    setCount((prev) => prev - 1)
+                                } else if (count < 10) {
+                                    setChecked([...checked, i])
                                     setCount((prev) => prev + 1)
                                 }
                             }}
                         >
-                            <img src={v} height={180} width={150} />
+                            <img
+                                src={v}
+                                height={180}
+                                width={150}
+                                style={{ filter: checked.includes(i) ? 'brightness(50%)' : 'initial' }}
+                            />
                         </div>
                     ))}
                 </div>
