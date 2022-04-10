@@ -53,11 +53,20 @@ function Header() {
 
                             cursor: 'pointer',
                         }}
+                        onClick={() => {
+                            router.push('/best')
+                        }}
                     >
                         베스트셀러
                     </div>
                     {isLogin ? (
-                        <div onClick={() => setLogin(!isLogin)} style={{ fontWeight: 'bold', cursor: 'pointer' }}>
+                        <div
+                            onClick={() => {
+                                setLogin(!isLogin)
+                                router.push('/login')
+                            }}
+                            style={{ fontWeight: 'bold', cursor: 'pointer' }}
+                        >
                             로그인
                         </div>
                     ) : (

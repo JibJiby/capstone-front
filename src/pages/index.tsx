@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { bookImage } from '@data/fake-book'
 import BackTop from '@components/BackTop'
-import styled from '@emotion/styled'
+import BooksContainer from '@components/BooksContainer'
 
 const Home = ({ isCompleted }: { isCompleted: boolean }) => {
     const router = useRouter()
@@ -41,7 +41,7 @@ const Home = ({ isCompleted }: { isCompleted: boolean }) => {
                             {myBooks.map((v, i) => (
                                 <>
                                     <div
-                                        key={i}
+                                        key={v}
                                         style={{
                                             marginBottom: '50px',
                                             display: 'flex',
@@ -51,7 +51,14 @@ const Home = ({ isCompleted }: { isCompleted: boolean }) => {
                                             position: 'relative',
                                         }}
                                     >
-                                        <img src={v} width={600} style={{ cursor: 'pointer' }} />
+                                        <img
+                                            src={v}
+                                            width={600}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => {
+                                                router.push(`/book/${bookImage.findIndex((w) => w === v)}`)
+                                            }}
+                                        />
                                         <div
                                             style={{
                                                 position: 'absolute',
@@ -92,27 +99,3 @@ export async function getStaticProps() {
         props: { isCompleted: data.completed }, // will be passed to the page component as props
     }
 }
-
-const BooksContainer = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, 150px);
-
-    column-gap: 50px;
-    row-gap: 50px;
-
-    @media screen and (min-width: 768px) and (max-width: 1023px) {
-        column-gap: 40px;
-    }
-
-    @media screen and (min-width: 676px) and (max-width: 767px) {
-        grid-template-columns: repeat(3, 150px);
-    }
-
-    @media screen and (min-width: 480px) and (max-width: 675px) {
-        grid-template-columns: repeat(2, 150px);
-    }
-
-    @media screen and (max-width: 479px) {
-        grid-template-columns: repeat(1, 150px);
-    }
-`

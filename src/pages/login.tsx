@@ -1,8 +1,9 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import useInput from '@hooks/useInput'
 import styled from '@emotion/styled'
+import { useCallback, useState } from 'react'
+import { css } from '@emotion/react'
 
 const Input = styled.input`
     width: 400px;
@@ -23,10 +24,23 @@ const Button = styled.button`
     font-size: 20px;
     font-weight: bold;
     user-select: none;
-    curosr: pointer;
+    cursor: pointer;
 
     border: none;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: #495057;
+    color: white;
+    letter-spacing: 3px;
+
+    &:hover {
+        opacity: 0.85;
+        transition: opacity 0.3s ease;
+    }
+`
+
+const errorMessageStyle = css`
+    color: red;
+    font-size: 14px;
 `
 
 function Login() {
@@ -34,6 +48,28 @@ function Login() {
 
     const [id, onChangeId] = useInput('')
     const [pw, onChangePw] = useInput('')
+
+    const [idError, setIdError] = useState(false)
+    const [pwError, setPwError] = useState(false)
+
+    const onLoginClick = useCallback(() => {
+        if (id === '') {
+            setIdError(true)
+        } else {
+            setIdError(false)
+        }
+
+        if (pw === '') {
+            setPwError(true)
+        } else {
+            setPwError(false)
+        }
+
+        if (id !== '' && pw !== '') {
+            // TODO: 로그인 API
+            router.push('/')
+        }
+    }, [id, pw])
 
     return (
         <div
@@ -57,13 +93,15 @@ function Login() {
             <div style={{ display: 'flex', flexDirection: 'column', marginTop: '48px' }}>
                 <div style={{ marginTop: '25px' }}>
                     <Input placeholder="아이디" onChange={onChangeId} value={id} />
+                    {idError && <div css={errorMessageStyle}>아이디를 입력해주세요</div>}
                 </div>
 
                 <div style={{ marginTop: '25px' }}>
                     <Input placeholder="비밀번호" onChange={onChangePw} value={pw} />
+                    {pwError && <div css={errorMessageStyle}>비밀번호를 입력해주세요</div>}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
-                    <Button>로그인</Button>
+                    <Button onClick={onLoginClick}>로그인</Button>
                 </div>
             </div>
         </div>

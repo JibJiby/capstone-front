@@ -1,7 +1,12 @@
 // https://emotion.sh/docs/css-prop#babel-preset
 
 {
-    "presets": [["next/babel"]],
+    "presets": [["next/babel", {
+      // https://stackoverflow.com/questions/66166316/what-is-the-proper-way-to-enable-the-css-prop-in-emotion-11-next-js-10-apps
+      "preset-react": {
+      "runtime": "automatic",
+      "importSource": "@emotion/react"
+    }}]],
     "plugins": ["@emotion/babel-plugin", 
       [
         // https://velog.io/@ooooorobo/Next.js%EC%97%90%EC%84%9C-Ant-Design-primary-color-%EB%B3%80%EA%B2%BD%ED%95%98%EA%B8%B0
