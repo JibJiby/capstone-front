@@ -69,7 +69,7 @@ const First = ({ isFirstDone }: { isFirstDone: boolean }) => {
                                 cursor: 'pointer',
                                 // backgroundColor: checked.includes(i) ? 'yellow' : 'initial'
                             }}
-                            key={i}
+                            key={v}
                             onClick={() => {
                                 if (checked.includes(i)) {
                                     setChecked([...checked.filter((v) => v !== i)])

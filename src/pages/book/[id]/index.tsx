@@ -13,7 +13,6 @@ const Book = () => {
                     <h1>상세 정보</h1>
                 </div>
                 <div>
-                    {/* FIXME: src 타입 */}
                     <img src={id && !Array.isArray(id) ? bookImage[parseInt(id)] : undefined} />
                 </div>
             </div>
