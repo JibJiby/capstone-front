@@ -14,7 +14,7 @@ const Book = () => {
                 </div>
                 <div>
                     {/* FIXME: src 타입 */}
-                    <img src={id && !Array.isArray(id) && bookImage[parseInt(id)]} />
+                    <img src={id && !Array.isArray(id) ? bookImage[parseInt(id)] : undefined} />
                 </div>
             </div>
         </AppLayout>
