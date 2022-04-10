@@ -2,11 +2,46 @@ import AppLayout from '@components/AppLayout'
 import { NextPage } from 'next'
 import { bookImage } from '../data/fake-book'
 import { Progress } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import styled from '@emotion/styled'
 
-const First: NextPage = () => {
+const BooksContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(4, 150px);
+
+    column-gap: 70px;
+    row-gap: 50px;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px) {
+        column-gap: 40px;
+    }
+
+    @media screen and (min-width: 676px) and (max-width: 767px) {
+        grid-template-columns: repeat(3, 150px);
+    }
+
+    @media screen and (min-width: 480px) and (max-width: 675px) {
+        grid-template-columns: repeat(2, 150px);
+    }
+
+    @media screen and (max-width: 479px) {
+        grid-template-columns: repeat(1, 150px);
+    }
+`
+
+const First = ({ isFirstDone }: { isFirstDone: boolean }) => {
+    const router = useRouter()
+
     const [count, setCount] = useState(0)
     const [checked, setChecked] = useState<Array<number>>([])
+
+    useEffect(() => {
+        if (isFirstDone) {
+            // 이미 샘플 도서 선택한 이력 있으면 홈 페이지로 이동.
+            router.push('/')
+        }
+    }, [])
 
     return (
         <AppLayout>
@@ -41,18 +76,14 @@ const First: NextPage = () => {
                     padding: '10px 10px',
                 }}
             >
-                <div
-                    style={{
-                        // grid
-                        // https://studiomeal.com/archives/533
-                        display: 'grid',
-
-                        gridTemplateColumns: 'repeat(4, 180px)',
-                        // gridTemplateRows: 'repeat(auto-fill, 300px)',
-
-                        columnGap: '70px',
-                        rowGap: '50px',
-                    }}
+                <BooksContainer
+                    style={
+                        {
+                            // grid
+                            // https://studiomeal.com/archives/533
+                            // gridTemplateRows: 'repeat(auto-fill, 300px)',
+                        }
+                    }
                 >
                     {/* 원하는 레이아웃 */}
                     {/* https://heeyamsec.tistory.com/37 */}
@@ -81,10 +112,21 @@ const First: NextPage = () => {
                             />
                         </div>
                     ))}
-                </div>
+                </BooksContainer>
             </div>
         </AppLayout>
     )
 }
 
 export default First
+
+export async function getStaticProps() {
+    // TODO: first 유무 확인하는 api 날리고
+    // const res = await fetch('https://jsonplaceholder.typicode.com/todos/10')
+    // const isFirstDone = await res.json()
+    const isFirstDone = false
+
+    return {
+        props: { isFirstDone }, // will be passed to the page component as props
+    }
+}
