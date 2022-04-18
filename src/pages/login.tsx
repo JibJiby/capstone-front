@@ -103,6 +103,21 @@ function Login() {
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
                     <Button onClick={onLoginClick}>로그인</Button>
                 </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '15px',
+                        userSelect: 'none',
+                    }}
+                >
+                    <u
+                        style={{ cursor: 'pointer', color: '#ff8787', fontWeight: 'bold' }}
+                        onClick={() => router.push('/signup')}
+                    >
+                        회원가입 하러 가기
+                    </u>
+                </div>
             </div>
         </div>
     )
