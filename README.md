@@ -1,62 +1,31 @@
-Docs
-https://nextjs.org/docs/basic-features/typescript
-
----
-
-<br><br>
-
-### 전체 세팅
-
-```bash
-npx create-next-app@lastest --ts
-```
-
-추가로 node 타입 설치 (react 타입은 설치됨)
-
-```bash
-npm i -D @types/node
-```
-
-<br><br>
-
-### emotion 설치
-
-```bash
-npm i @emotion/react @emotion/styled
-npm i -D @emotion/babel-plugin emotion-normalize
-```
-
-<br><br>
-
-### Eslint 설정
-
-_react_
-
-```bash
-npm i -D eslint-plugin-import eslint-plugin-react eslint-plugin-react-hooks
-```
-
-_prettier Eslint_
-
-```bash
-npm i -D eslint-config-prettier eslint-plugin-prettier
-```
+# 캡스톤 디자인 프론트엔드
 
 <br>
 
-_typescript Eslint_
+### 서비스
 
-Dosc
-https://www.npmjs.com/package/@typescript-eslint/eslint-plugin
+주제 : 도서 추천 서비스
 
-```bash
-npm i -D @typescript-eslint/parser @typescript-eslint/eslint-plugin
-```
+개인의 선호 도서 정보를 신규 회원이었을 때 수집하고 이를 바탕으로 개인에게 맞는 도서를 추천하는 서비스입니다.
+
+<br>
+
+<br>
+
+### 기술 스택
+
+-   React
+-   Next.js
+-   Typescript
+-   emotion
+-   react-query
 
 <br><br>
 
-### 테스트 추가
+### 메뉴 구조도
 
-```bash
-npm i -D @testing-library/jest-dom @testing-library/react @types/jest @types/react-dom jest
-```
+<br>
+
+![스크린샷 2022-04-19 오전 12 35 07](https://user-images.githubusercontent.com/24295703/163832751-f521bdbd-3efd-41ee-b191-e61923da3722.png)
+
+<br>
