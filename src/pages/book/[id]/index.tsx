@@ -33,7 +33,7 @@ const Book = () => {
                     style={{
                         marginBottom: '30px',
                         marginTop: '40px',
-                        backgroundColor: '#e9ecef',
+                        backgroundColor: '#f1f3f5',
                         display: 'flex',
                         width: '70%',
                         borderRadius: '8px',
