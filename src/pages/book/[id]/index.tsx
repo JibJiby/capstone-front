@@ -46,7 +46,7 @@ const Book = () => {
                         <div style={{ marginTop: '10px', fontSize: '24px', fontWeight: 'bold' }}>도서 제목</div>
                         <div style={{ marginTop: '14px', fontSize: '18px' }}>작가 / 출판사</div>
                         <div style={{ marginTop: '14px', fontSize: '11pt', height: '70px' }}>줄거리 ...</div>
-                        <div style={{ marginTop: '14px', display: 'flex', gap: '10px' }}>
+                        <div style={{ marginTop: '14px', marginBottom: '15px', display: 'flex', gap: '10px' }}>
                             <Image src="/rating-star.png" width={40} height={40} />
                             <Image src="/rating-star.png" width={40} height={40} />
                             <Image src="/rating-star.png" width={40} height={40} />
