@@ -76,6 +76,7 @@ function Header() {
                             }}
                             onClick={() => {
                                 setLogin(!isLogin)
+                                router.push('/about')
                             }}
                         >
                             <Image src="/user-icon.png" width={32} height={32} />
