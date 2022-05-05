@@ -1,9 +1,15 @@
+import { useCallback, useEffect, useState } from 'react'
+import Router, { useRouter } from 'next/router'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
-import useInput from '@hooks/useInput'
+
 import styled from '@emotion/styled'
-import { useCallback, useState } from 'react'
 import { css } from '@emotion/react'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+
+import { loadMyInfoAPI } from '@apis/user'
+import useInput from '@hooks/useInput'
+import { AxiosError } from 'axios'
+import { signUpAPI } from '@apis/auth'
 
 const Input = styled.input`
     width: 400px;
@@ -44,6 +50,24 @@ const errorMessageStyle = css`
 `
 
 function Signup() {
+    const queryClient = useQueryClient()
+    const [loading, setLoading] = useState(false)
+    const { data: me } = useQuery('user', loadMyInfoAPI)
+    const mutation = useMutation<{ email: string; nickname: string; password: string }, AxiosError>(signUpAPI, {
+        onMutate: () => {
+            setLoading(true)
+        },
+        onError: (error) => {
+            console.error(error.response?.data)
+        },
+        onSuccess: () => {
+            // queryClient.setQueryData('user', null)
+        },
+        onSettled: () => {
+            setLoading(false)
+        },
+    })
+
     const router = useRouter()
 
     const [id, onChangeId, setId] = useInput('')
@@ -56,7 +80,7 @@ function Signup() {
     const [pwConfirmError, setPwConfirmError] = useState(false)
     const [nicknameError, setNicknameError] = useState(false)
 
-    const onSignupClick = useCallback(() => {
+    const onSubmit = useCallback(() => {
         if (id === '') {
             setIdError(true)
         } else {
@@ -92,6 +116,16 @@ function Signup() {
             router.push('/login')
         }
     }, [id, pw, pwConfirm, nickname])
+
+    console.log('me', me)
+    useEffect(() => {
+        if (me) {
+            console.log('redirects to /')
+            Router.replace('/')
+        } else {
+            console.log('me 없음')
+        }
+    }, [me])
 
     return (
         <div
@@ -190,7 +224,7 @@ function Signup() {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
-                    <Button onClick={onSignupClick}>회원가입</Button>
+                    <Button onClick={onSubmit}>회원가입</Button>
                 </div>
             </div>
         </div>

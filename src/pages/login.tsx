@@ -97,7 +97,7 @@ function Login() {
                 </div>
 
                 <div style={{ marginTop: '25px' }}>
-                    <Input placeholder="비밀번호" onChange={onChangePw} value={pw} />
+                    <Input placeholder="비밀번호" onChange={onChangePw} value={pw} type="password" />
                     {pwError && <div css={errorMessageStyle}>비밀번호를 입력해주세요</div>}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
