@@ -27,6 +27,7 @@
       "@styles/*": ["src/styles/*"],
       "@hooks/*": ["src/hooks/*"],
       "@data/*": ["src/data/*"],
+      "@apis/*": ["src/apis/*"]
     }
   },
   "include": [
@@ -35,6 +36,7 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/.next/**"
   ]
 }

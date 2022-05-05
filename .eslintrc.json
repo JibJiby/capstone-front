@@ -20,5 +20,5 @@
   "plugins": [
     "import",
     "react-hooks",
-],
+  ],
 }

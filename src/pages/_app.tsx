@@ -4,7 +4,8 @@ import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { globalStyles } from '@styles/globals'
 
-import '@styles/antd.less'
+// import '@styles/antd.less'
+// import 'antd/dist/antd.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const queryClientRef = useRef<QueryClient>()

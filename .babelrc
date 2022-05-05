@@ -7,14 +7,14 @@
       "runtime": "automatic",
       "importSource": "@emotion/react"
     }}]],
-    "plugins": ["@emotion/babel-plugin", 
-      [
-        // https://velog.io/@ooooorobo/Next.js%EC%97%90%EC%84%9C-Ant-Design-primary-color-%EB%B3%80%EA%B2%BD%ED%95%98%EA%B8%B0
-      "import",
-        {
-          "libraryName": "antd",
-          "style": true
-        }
-      ]
-    ]
+    // "plugins": ["@emotion/babel-plugin", 
+    //   [
+    //     // https://velog.io/@ooooorobo/Next.js%EC%97%90%EC%84%9C-Ant-Design-primary-color-%EB%B3%80%EA%B2%BD%ED%95%98%EA%B8%B0
+    //   "import",
+    //     {
+    //       "libraryName": "antd",
+    //       "style": true
+    //     }
+    //   ]
+    // ]
   }
