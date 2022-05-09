@@ -107,12 +107,16 @@ const Home = ({ isCompleted }: { isCompleted: boolean }) => {
 export default Home
 
 export async function getStaticProps() {
-    const res = await fetch('https://jsonplaceholder.typicode.com/todos/10')
-    const data = await res.json()
-    console.log('미리 가져오기')
-    console.log(data)
+    // FIXME: 이디야 와이파이 이슈
+    // const res = await fetch('https://jsonplaceholder.typicode.com/todos/10')
+    // const data = await res.json()
+    // console.log('미리 가져오기')
+    // console.log(data)
+    // return {
+    //     props: { isCompleted: data.completed }, // will be passed to the page component as props
+    // }
 
     return {
-        props: { isCompleted: data.completed }, // will be passed to the page component as props
+        props: { isCompleted: false },
     }
 }
