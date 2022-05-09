@@ -53,20 +53,23 @@ function Signup() {
     const queryClient = useQueryClient()
     const [loading, setLoading] = useState(false)
     const { data: me } = useQuery('user', loadMyInfoAPI)
-    const mutation = useMutation<{ email: string; nickname: string; password: string }, AxiosError>(signUpAPI, {
-        onMutate: () => {
-            setLoading(true)
+    const mutation = useMutation<Promise<any>, AxiosError, { email: string; nickname: string; password: string }>(
+        signUpAPI,
+        {
+            onMutate: () => {
+                setLoading(true)
+            },
+            onError: (error) => {
+                console.error(error.response?.data)
+            },
+            onSuccess: () => {
+                // queryClient.setQueryData('user', null)
+            },
+            onSettled: () => {
+                setLoading(false)
+            },
         },
-        onError: (error) => {
-            console.error(error.response?.data)
-        },
-        onSuccess: () => {
-            // queryClient.setQueryData('user', null)
-        },
-        onSettled: () => {
-            setLoading(false)
-        },
-    })
+    )
 
     const router = useRouter()
 
