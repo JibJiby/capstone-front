@@ -1,24 +1,28 @@
-import type { NextPage } from 'next'
+import type { GetServerSidePropsContext, NextPage } from 'next'
 import AppLayout from '@components/AppLayout'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { bookImage } from '@data/fake-book'
 import BackTop from '@components/BackTop'
 import BooksContainer from '@components/BooksContainer'
+import axios from 'axios'
+import {loadMyInfoAPI} from '@apis/user'
 
-const Home = ({ isCompleted }: { isCompleted: boolean }) => {
+
+// { isCompleted }: { isCompleted: boolean }
+const Home = () => {
     const router = useRouter()
 
     const [myBooks, setMyBooks] = useState([...bookImage])
 
-    console.log('isCompleted')
-    console.log(isCompleted)
+    // console.log('isCompleted')
+    // console.log(isCompleted)
 
-    useEffect(() => {
-        if (!isCompleted) {
-            router.push('/first')
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (!isCompleted) {
+    //         router.push('/first')
+    //     }
+    // }, [])
 
     // Infinite Scroll
     useEffect(() => {
@@ -58,7 +62,7 @@ const Home = ({ isCompleted }: { isCompleted: boolean }) => {
                             {myBooks.map((v, i) => (
                                 <>
                                     <div
-                                        key={v}
+                                        key={i}
                                         style={{
                                             marginBottom: '50px',
                                             display: 'flex',
@@ -69,6 +73,7 @@ const Home = ({ isCompleted }: { isCompleted: boolean }) => {
                                         }}
                                     >
                                         <img
+                                            key={i}
                                             src={v}
                                             width={600}
                                             style={{ cursor: 'pointer' }}
@@ -77,6 +82,7 @@ const Home = ({ isCompleted }: { isCompleted: boolean }) => {
                                             }}
                                         />
                                         <div
+                                            key={i}
                                             style={{
                                                 position: 'absolute',
                                                 top: 0,
@@ -106,17 +112,51 @@ const Home = ({ isCompleted }: { isCompleted: boolean }) => {
 
 export default Home
 
-export async function getStaticProps() {
-    // FIXME: 이디야 와이파이 이슈
-    // const res = await fetch('https://jsonplaceholder.typicode.com/todos/10')
-    // const data = await res.json()
-    // console.log('미리 가져오기')
-    // console.log(data)
-    // return {
-    //     props: { isCompleted: data.completed }, // will be passed to the page component as props
-    // }
+// export async function getStaticProps() {
+//     // FIXME: 이디야 와이파이 이슈
+//     // const res = await fetch('https://jsonplaceholder.typicode.com/todos/10')
+//     // const data = await res.json()
+//     // console.log('미리 가져오기')
+//     // console.log(data)
+//     // return {
+//     //     props: { isCompleted: data.completed }, // will be passed to the page component as props
+//     // }
 
-    return {
-        props: { isCompleted: false },
+//     return {
+//         props: { isCompleted: false },
+//     }
+// }
+
+
+
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.common.cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.common.cookie = cookie;
     }
+
+    try {
+        const data = await loadMyInfoAPI();
+        if (!data) {
+            return {
+                redirect: {
+                    destination: '/about',
+                    permanent: false,
+                },
+            };
+        }
+        return {
+            props: {},
+        };
+
+    } catch (err) {
+        return {
+            redirect: {
+                destination: '/about',
+                permanent: false,
+            },
+        };
+    }
+
 }

@@ -1,10 +1,38 @@
+import { logOutAPI } from '@apis/auth'
+import { loadMyInfoAPI } from '@apis/user'
+import { AxiosError } from 'axios'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 function Header() {
     const router = useRouter()
-    const [isLogin, setLogin] = useState(false)
+    const queryClient = useQueryClient();
+    const { data: me } = useQuery('user', loadMyInfoAPI);
+
+    const [loading, setLoading] = useState(false);
+
+    const mutation = useMutation<void, AxiosError>(logOutAPI, {
+        onMutate: () => {
+          setLoading(true);
+        },
+        onError: (error) => {
+          alert(error.response?.data);
+        },
+        onSuccess: () => {
+          queryClient.setQueryData('user', null);
+          router.push('/')
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+    });
+
+    
+    const onLogOut = useCallback(() => {
+        mutation.mutate();
+      }, [mutation]);
 
     return (
         <div
@@ -59,10 +87,9 @@ function Header() {
                     >
                         베스트셀러
                     </div>
-                    {isLogin ? (
+                    {!me ? (
                         <div
                             onClick={() => {
-                                setLogin(!isLogin)
                                 router.push('/login')
                             }}
                             style={{ fontWeight: 'bold', cursor: 'pointer' }}
@@ -74,9 +101,7 @@ function Header() {
                             style={{
                                 cursor: 'pointer',
                             }}
-                            onClick={() => {
-                                setLogin(!isLogin)
-                            }}
+                            onClick={onLogOut}
                         >
                             <Image src="/user-icon.png" width={32} height={32} />
                         </div>

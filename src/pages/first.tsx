@@ -1,23 +1,20 @@
 import AppLayout from '@components/AppLayout'
-import { NextPage } from 'next'
 import { bookImage } from '../data/fake-book'
 import { Progress } from 'antd'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import BooksContainer from '@components/BooksContainer'
+import { GetServerSidePropsContext } from 'next'
+import axios from 'axios'
+import { loadMyInfoAPI } from '@apis/user'
+
+// import 'antd/lib/progress/style/index.css'
 
 const First = ({ isFirstDone }: { isFirstDone: boolean }) => {
     const router = useRouter()
 
     const [count, setCount] = useState(0)
     const [checked, setChecked] = useState<Array<number>>([])
-
-    useEffect(() => {
-        if (isFirstDone) {
-            // 이미 샘플 도서 선택한 이력 있으면 홈 페이지로 이동.
-            router.push('/')
-        }
-    }, [])
 
     return (
         <AppLayout>
@@ -69,7 +66,7 @@ const First = ({ isFirstDone }: { isFirstDone: boolean }) => {
                                 cursor: 'pointer',
                                 // backgroundColor: checked.includes(i) ? 'yellow' : 'initial'
                             }}
-                            key={v}
+                            key={i}
                             onClick={() => {
                                 if (checked.includes(i)) {
                                     setChecked([...checked.filter((v) => v !== i)])
@@ -96,13 +93,33 @@ const First = ({ isFirstDone }: { isFirstDone: boolean }) => {
 
 export default First
 
-export async function getStaticProps() {
-    // TODO: first 유무 확인하는 api 날리고
-    // const res = await fetch('https://jsonplaceholder.typicode.com/todos/10')
-    // const isFirstDone = await res.json()
-    const isFirstDone = false
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.common.cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.common.cookie = cookie;
+    }
 
-    return {
-        props: { isFirstDone }, // will be passed to the page component as props
+    try {
+        // FIXME: 내 정보 가져오는 거 말고, 최초 시행 유무 가져오기.
+        const data = await loadMyInfoAPI();
+        if (data) {
+            // 이미 로그인한 상태라면
+            return {
+                redirect: {
+                    destination: '/',
+                    permanent: false,
+                }
+            }
+        }
+
+    } catch (err) {
+        // 비로그인 상태라면 이대로.
+        return {
+            redirect: {
+                destination: '/about',
+                permanent: false,
+            }
+        };
     }
 }

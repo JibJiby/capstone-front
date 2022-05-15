@@ -1,10 +1,7 @@
 import AppLayout from '@components/AppLayout'
 import { Button, Modal, Table, Upload } from 'antd'
 import { DeleteFilled, InboxOutlined } from '@ant-design/icons'
-import { useState } from 'react'
 
-// 느려지게 하는 주범
-import 'antd/dist/antd.css'
 import useModal from '@hooks/useModal'
 import useInput from '@hooks/useInput'
 import styled from '@emotion/styled'

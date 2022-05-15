@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-const SignupButton = styled.button`
+const LoginButton = styled.button`
     border: none;
     border-radius: 12px;
 
@@ -17,6 +17,7 @@ const SignupButton = styled.button`
 
     background-color: white;
 
+    box-shadow: 0px 4px 8px rgb(2 32 71 / 20%), 0px 8px 16px rgb(0 27 55 / 25%);
     &:hover {
         background-color: #868e96;
         color: white;
@@ -61,13 +62,13 @@ const About = () => {
                 {/* TODO: media css 추가 */}이 책을 좋아하면 저 책도 좋아할 거 같아요.
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', userSelect: 'none' }}>
-                <SignupButton
+                <LoginButton
                     onClick={() => {
-                        router.push('/signup')
+                        router.push('/login')
                     }}
                 >
-                    회원 가입 하러 가기
-                </SignupButton>
+                    이용하러 가기
+                </LoginButton>
             </div>
         </div>
     )

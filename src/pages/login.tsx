@@ -4,6 +4,11 @@ import useInput from '@hooks/useInput'
 import styled from '@emotion/styled'
 import { useCallback, useState } from 'react'
 import { css } from '@emotion/react'
+import { logInAPI } from '@apis/auth'
+import { useMutation } from 'react-query'
+import axios, { AxiosError } from 'axios'
+import { GetServerSidePropsContext } from 'next'
+import { loadMyInfoAPI } from '@apis/user'
 
 const Input = styled.input`
     width: 400px;
@@ -51,12 +56,39 @@ function Login() {
 
     const [idError, setIdError] = useState(false)
     const [pwError, setPwError] = useState(false)
+    const [loading, setLoading] = useState(false)
+
+    const mutation = useMutation<Promise<any>, AxiosError, { email: string; password: string }>(
+        logInAPI,
+        {
+            onMutate: () => {
+                setLoading(true)
+            },
+            onError: (error) => {
+                // 이메일 중복 확인 등 에러 마다 처리
+                console.error(error.response?.data)
+            },
+            onSuccess: () => {
+                // queryClient.setQueryData('user', null)
+                router.push('/')
+            },
+            onSettled: () => {
+                setLoading(false)
+            },
+        },
+    )
 
     const onLoginClick = useCallback(() => {
         if (id === '') {
             setIdError(true)
         } else {
-            setIdError(false)
+            const emailRegex =
+                /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            if(!emailRegex.test(id)) {
+                setIdError(true)
+            } else {
+                setIdError(false)
+            }
         }
 
         if (pw === '') {
@@ -67,7 +99,8 @@ function Login() {
 
         if (id !== '' && pw !== '') {
             // TODO: 로그인 API
-            router.push('/')
+            mutation.mutate({email: id, password: pw})
+            
         }
     }, [id, pw])
 
@@ -93,12 +126,12 @@ function Login() {
             <div style={{ display: 'flex', flexDirection: 'column', marginTop: '48px' }}>
                 <div style={{ marginTop: '25px' }}>
                     <Input placeholder="아이디" onChange={onChangeId} value={id} />
-                    {idError && <div css={errorMessageStyle}>아이디를 입력해주세요</div>}
+                    {idError && <div css={errorMessageStyle}>아이디를 제대로 입력해주세요</div>}
                 </div>
 
                 <div style={{ marginTop: '25px' }}>
                     <Input placeholder="비밀번호" onChange={onChangePw} value={pw} type="password" />
-                    {pwError && <div css={errorMessageStyle}>비밀번호를 입력해주세요</div>}
+                    {pwError && <div css={errorMessageStyle}>비밀번호를 제대로 입력해주세요</div>}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
                     <Button onClick={onLoginClick}>로그인</Button>
@@ -122,5 +155,44 @@ function Login() {
         </div>
     )
 }
+
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.common.cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.common.cookie = cookie;
+    }
+
+    try {
+        const data = await loadMyInfoAPI();
+        if (!data) {
+            // 이 경우는 없을 듯.
+
+            // return {
+            //     redirect: {
+            //         // 
+            //         destination: '/',
+            //         permanent: false,
+            //     },
+            // };
+        } else {
+            // 이미 로그인한 상태라면
+            return {
+                redirect: {
+                    destination: '/',
+                    permanent: false,
+                }
+            }
+        }
+
+    } catch (err) {
+        // 비로그인 상태라면 이대로.
+        return {
+            props: {}
+        };
+    }
+
+}
+
 
 export default Login
