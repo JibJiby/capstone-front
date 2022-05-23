@@ -5,6 +5,9 @@ import { useCallback, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 const TestPage = () => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
     const queryClient = useQueryClient()
     const { data: me, isLoading: isLoadingMyInfo } = useQuery('user', loadMyInfoAPI, {
         // 유효 기한
@@ -16,37 +19,25 @@ const TestPage = () => {
     console.log(me)
 
     const loginMutation = useMutation<Promise<any>, AxiosError, { email: string; password: string }>('user', logInAPI, {
-        // onMutate: () => {
-        //     setLoading(true)
-        // },
         onError: (error) => {
             console.error(error.response?.data)
         },
         onSuccess: (user) => {
             queryClient.setQueryData('user', user)
         },
-        // onSettled: () => {
-        //     setLoading(false)
-        // },
     })
 
     const logoutMutation = useMutation<void, AxiosError>(logOutAPI, {
-        // onMutate: () => {
-        //     setLoading(true)
-        // },
         onError: (error) => {
             alert(error.response?.data)
         },
         onSuccess: () => {
             queryClient.setQueryData('user', null)
         },
-        // onSettled: () => {
-        //     setLoading(false)
-        // },
     })
 
     const onLoginCb = useCallback(() => {
-        loginMutation.mutate({ email: 'aaa@aaa.com', password: 'aaa' })
+        loginMutation.mutate({ email, password })
     }, [loginMutation])
 
     const onLogoutCb = useCallback(() => {
@@ -54,10 +45,7 @@ const TestPage = () => {
     }, [logoutMutation])
 
     return (
-        <div>
-            테스트 페이지
-            {me ? <button onClick={onLogoutCb}>로그아웃</button> : <button onClick={onLoginCb}>로그인</button>}
-        </div>
+        <div>{me ? <button onClick={onLogoutCb}>로그아웃</button> : <button onClick={onLoginCb}>로그인</button>}</div>
     )
 }
 

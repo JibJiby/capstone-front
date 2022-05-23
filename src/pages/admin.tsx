@@ -5,6 +5,9 @@ import { DeleteFilled, InboxOutlined } from '@ant-design/icons'
 import useModal from '@hooks/useModal'
 import useInput from '@hooks/useInput'
 import styled from '@emotion/styled'
+import { GetServerSidePropsContext } from 'next'
+import axios from 'axios'
+import { loadMyInfoAPI } from '@apis/user'
 
 const { Dragger } = Upload
 
@@ -209,6 +212,48 @@ const Admin = () => {
             </div>
         </AppLayout>
     )
+}
+
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+    const cookie = context.req ? context.req.headers.cookie : ''
+    axios.defaults.headers.common.cookie = ''
+    if (context.req && cookie) {
+        axios.defaults.headers.common.cookie = cookie
+    }
+
+    try {
+        const data = await loadMyInfoAPI()
+        console.log('data  --- ', data)
+        if (!data) {
+            return {
+                redirect: {
+                    destination: '/about',
+                    permanent: false,
+                },
+            }
+        } else {
+            if (data.userClass === 'admin') {
+                return {
+                    props: {},
+                }
+            } else {
+                return {
+                    redirect: {
+                        destination: '/',
+                        permanent: false,
+                    },
+                }
+            }
+        }
+    } catch (err) {
+        // 비로그인 상태라면 이대로.
+        return {
+            redirect: {
+                destination: '/about',
+                permanent: false,
+            },
+        }
+    }
 }
 
 export default Admin

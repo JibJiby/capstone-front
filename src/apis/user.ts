@@ -35,7 +35,6 @@ export function changePasswordAPI(userId: string, newPassword: string) {
     return axios.patch(`/user/${userId}/password`, { password: newPassword }).then((response) => response.data)
 }
 
-// 아이디 삭제?
 export function deleteUserAPI(userId: string) {
     return axios.delete(`/user/${userId}`).then((response) => response.data)
 }

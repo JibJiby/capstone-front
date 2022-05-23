@@ -58,33 +58,39 @@ function Login() {
     const [pwError, setPwError] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const mutation = useMutation<Promise<any>, AxiosError, { email: string; password: string }>(
-        logInAPI,
-        {
-            onMutate: () => {
-                setLoading(true)
-            },
-            onError: (error) => {
-                // 이메일 중복 확인 등 에러 마다 처리
-                console.error(error.response?.data)
-            },
-            onSuccess: () => {
-                // queryClient.setQueryData('user', null)
-                router.push('/')
-            },
-            onSettled: () => {
-                setLoading(false)
-            },
+    const onPressPw = useCallback(
+        (e) => {
+            if (e.key === 'Enter') {
+                onLoginClick()
+            }
         },
+        [pw],
     )
+
+    const mutation = useMutation<Promise<any>, AxiosError, { email: string; password: string }>(logInAPI, {
+        onMutate: () => {
+            setLoading(true)
+        },
+        onError: (error) => {
+            // 이메일 중복 확인 등 에러 마다 처리
+            console.error(error.response?.data)
+        },
+        onSuccess: () => {
+            // queryClient.setQueryData('user', null)
+            router.push('/')
+        },
+        onSettled: () => {
+            setLoading(false)
+        },
+    })
 
     const onLoginClick = useCallback(() => {
         if (id === '') {
             setIdError(true)
         } else {
             const emailRegex =
-                /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-            if(!emailRegex.test(id)) {
+                /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+            if (!emailRegex.test(id)) {
                 setIdError(true)
             } else {
                 setIdError(false)
@@ -99,8 +105,7 @@ function Login() {
 
         if (id !== '' && pw !== '') {
             // TODO: 로그인 API
-            mutation.mutate({email: id, password: pw})
-            
+            mutation.mutate({ email: id, password: pw })
         }
     }, [id, pw])
 
@@ -130,7 +135,13 @@ function Login() {
                 </div>
 
                 <div style={{ marginTop: '25px' }}>
-                    <Input placeholder="비밀번호" onChange={onChangePw} value={pw} type="password" />
+                    <Input
+                        placeholder="비밀번호"
+                        onChange={onChangePw}
+                        onKeyPress={onPressPw}
+                        value={pw}
+                        type="password"
+                    />
                     {pwError && <div css={errorMessageStyle}>비밀번호를 제대로 입력해주세요</div>}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
@@ -157,20 +168,19 @@ function Login() {
 }
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-    const cookie = context.req ? context.req.headers.cookie : '';
-    axios.defaults.headers.common.cookie = '';
+    const cookie = context.req ? context.req.headers.cookie : ''
+    axios.defaults.headers.common.cookie = ''
     if (context.req && cookie) {
-      axios.defaults.headers.common.cookie = cookie;
+        axios.defaults.headers.common.cookie = cookie
     }
 
     try {
-        const data = await loadMyInfoAPI();
+        const data = await loadMyInfoAPI()
         if (!data) {
             // 이 경우는 없을 듯.
-
             // return {
             //     redirect: {
-            //         // 
+            //         //
             //         destination: '/',
             //         permanent: false,
             //     },
@@ -181,18 +191,15 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
                 redirect: {
                     destination: '/',
                     permanent: false,
-                }
+                },
             }
         }
-
     } catch (err) {
         // 비로그인 상태라면 이대로.
         return {
-            props: {}
-        };
+            props: {},
+        }
     }
-
 }
-
 
 export default Login

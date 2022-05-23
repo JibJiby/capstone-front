@@ -5,34 +5,34 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { LogInOutButton } from './styles'
 
 function Header() {
     const router = useRouter()
-    const queryClient = useQueryClient();
-    const { data: me } = useQuery('user', loadMyInfoAPI);
+    const queryClient = useQueryClient()
+    const { data: me } = useQuery('user', loadMyInfoAPI)
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false)
 
     const mutation = useMutation<void, AxiosError>(logOutAPI, {
         onMutate: () => {
-          setLoading(true);
+            setLoading(true)
         },
         onError: (error) => {
-          alert(error.response?.data);
+            alert(error.response?.data)
         },
         onSuccess: () => {
-          queryClient.setQueryData('user', null);
-          router.push('/')
+            queryClient.setQueryData('user', null)
+            router.push('/')
         },
         onSettled: () => {
-          setLoading(false);
+            setLoading(false)
         },
-    });
+    })
 
-    
     const onLogOut = useCallback(() => {
-        mutation.mutate();
-      }, [mutation]);
+        mutation.mutate()
+    }, [mutation])
 
     return (
         <div
@@ -73,7 +73,7 @@ function Header() {
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                     <div
                         style={{
-                            marginRight: '40px',
+                            // marginRight: '40px',
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center',
@@ -88,22 +88,26 @@ function Header() {
                         베스트셀러
                     </div>
                     {!me ? (
-                        <div
+                        <LogInOutButton
                             onClick={() => {
                                 router.push('/login')
                             }}
-                            style={{ fontWeight: 'bold', cursor: 'pointer' }}
+                            style={{ fontWeight: 'bold', cursor: 'pointer', marginLeft: '20px' }}
                         >
                             로그인
-                        </div>
+                        </LogInOutButton>
                     ) : (
-                        <div
-                            style={{
-                                cursor: 'pointer',
-                            }}
-                            onClick={onLogOut}
-                        >
-                            <Image src="/user-icon.png" width={32} height={32} />
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <div
+                                style={{
+                                    cursor: 'pointer',
+                                    marginLeft: '15px',
+                                    marginRight: '15px',
+                                }}
+                            >
+                                <Image src="/user-icon.png" width={32} height={32} />
+                            </div>
+                            <LogInOutButton onClick={onLogOut}>로그아웃</LogInOutButton>
                         </div>
                     )}
                 </div>
