@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useQuery } from 'react-query'
+import { loadMyInfoAPI } from '@apis/user'
 
 const LoginButton = styled.button`
     border: none;
@@ -26,6 +28,9 @@ const LoginButton = styled.button`
 
 const About = () => {
     const router = useRouter()
+    const { data } = useQuery('login-test', loadMyInfoAPI)
+    console.log('--------로그인 정보--------')
+    console.log(data)
 
     return (
         <div
