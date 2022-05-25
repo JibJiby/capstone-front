@@ -31,7 +31,7 @@ const About = () => {
     const router = useRouter()
     const { data, error } = useQuery('login-test', () => {
         return axios
-            .get('https://api.bookcommend.net/user', { withCredentials: true })
+            .get('https://api.bookcommend.net/user/', { withCredentials: true })
             .then((response) => response.data)
     })
     console.log('--------로그인 정보--------')
