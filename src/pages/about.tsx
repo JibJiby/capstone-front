@@ -29,17 +29,17 @@ const LoginButton = styled.button`
 
 const About = () => {
     const router = useRouter()
-    const { data, error } = useQuery('login-test', () => {
-        return axios
-            .get('https://api.bookcommend.net/user/', { withCredentials: true })
-            .then((response) => response.data)
-    })
-    console.log('--------로그인 정보--------')
-    console.log(data)
-    if (error) {
-        console.log('-------ERROR------')
-        console.log(error)
-    }
+    // const { data, error } = useQuery('login-test', () => {
+    //     return axios
+    //         .get('https://api.bookcommend.net/user/', { withCredentials: true })
+    //         .then((response) => response.data)
+    // })
+    // console.log('--------로그인 정보--------')
+    // console.log(data)
+    // if (error) {
+    //     console.log('-------ERROR------')
+    //     console.log(error)
+    // }
 
     return (
         <div

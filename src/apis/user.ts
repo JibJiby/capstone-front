@@ -17,7 +17,7 @@ export function loadUserAPI(data: number) {
 }
 
 export function loadMyInfoAPI() {
-    return axios.get('/user').then((response) => response.data)
+    return axios.get('/user/').then((response) => response.data)
 }
 
 /*
