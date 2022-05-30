@@ -71,7 +71,7 @@ function Header() {
                     <Image src="/logo.svg" width={100} height={50} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <div
+                    {/* <div
                         style={{
                             // marginRight: '40px',
                             display: 'flex',
@@ -86,7 +86,7 @@ function Header() {
                         }}
                     >
                         베스트셀러
-                    </div>
+                    </div> */}
                     {!me ? (
                         <LogInOutButton
                             onClick={() => {
@@ -98,7 +98,7 @@ function Header() {
                         </LogInOutButton>
                     ) : (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <div
+                            {/* <div
                                 style={{
                                     cursor: 'pointer',
                                     marginLeft: '15px',
@@ -106,7 +106,7 @@ function Header() {
                                 }}
                             >
                                 <Image src="/user-icon.png" width={32} height={32} />
-                            </div>
+                            </div> */}
                             <LogInOutButton onClick={onLogOut}>로그아웃</LogInOutButton>
                         </div>
                     )}

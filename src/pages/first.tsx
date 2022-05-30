@@ -7,10 +7,11 @@ import BooksContainer from '@components/BooksContainer'
 import { GetServerSidePropsContext } from 'next'
 import axios from 'axios'
 import { loadMyInfoAPI } from '@apis/user'
+import { isFirstAPI } from '@apis/likeslog'
 
 // import 'antd/lib/progress/style/index.css'
 
-const First = ({ isFirstDone }: { isFirstDone: boolean }) => {
+const First = () => {
     const router = useRouter()
 
     const [count, setCount] = useState(0)
@@ -94,6 +95,8 @@ const First = ({ isFirstDone }: { isFirstDone: boolean }) => {
 export default First
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+    console.log('first 페이지!!!')
+    
     const cookie = context.req ? context.req.headers.cookie : '';
     axios.defaults.headers.common.cookie = '';
     if (context.req && cookie) {
@@ -104,6 +107,18 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         // FIXME: 내 정보 가져오는 거 말고, 최초 시행 유무 가져오기.
         const data = await loadMyInfoAPI();
         if (data) {
+
+            // FIXME: 리다이렉션 수 많은 문제
+            // const isFirst = await isFirstAPI()
+            // if(isFirst) {
+            //     return {
+            //         redirect: {
+            //             destination: '/first',
+            //             permanent: false,
+            //         }
+            //     }
+            // } 
+
             // 이미 로그인한 상태라면
             return {
                 redirect: {
@@ -115,6 +130,9 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
     } catch (err) {
         // 비로그인 상태라면 이대로.
+        // FIXME: 여기서 항상 에러
+        console.log('first 에러!!!!')
+        console.log(err)
         return {
             redirect: {
                 destination: '/about',

@@ -3,6 +3,10 @@ import { bookImage } from '@data/fake-book'
 import AppLayout from '@components/AppLayout'
 import Image from 'next/image'
 import styled from '@emotion/styled'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { confirmCheckedBookAPI, loadOneBookInfo } from '@apis/book'
+import { toggleLikesAPI } from '@apis/likeslog'
+import { useCallback } from 'react'
 
 const LinkButton = styled.button`
     cursor: pointer;
@@ -24,7 +28,44 @@ const LinkButton = styled.button`
 
 const Book = () => {
     const router = useRouter()
-    const { id } = router.query
+    const queryClient = useQueryClient()
+
+    const { id: isbn } = router.query
+
+    const { data: bookInfo } = useQuery(['book', isbn], () => loadOneBookInfo(isbn as string))
+    const { data: isChecked } = useQuery(['checked', isbn], () => confirmCheckedBookAPI(isbn as string))
+
+    const mutation = useMutation(toggleLikesAPI, {
+        onMutate: () => {
+            //
+        },
+        onError: () => {
+            //
+        },
+        onSuccess: (result) => {
+            console.log('mutate success  ')
+            console.log(result)
+
+            if (result === 'unchecked') {
+                queryClient.setQueryData(['checked', isbn], false)
+            } else if (result === 'checked') {
+                queryClient.setQueryData(['checked', isbn], true)
+            } else {
+                console.log('=======================')
+                console.log('예외 값  :: ', result)
+                console.log('=======================')
+            }
+        },
+        onSettled: () => {
+            //
+        },
+    })
+
+    const onClickLikesButton = useCallback(() => {
+        // console.log('on click likes')
+        // console.log(isbn)
+        mutation.mutate(isbn as string)
+    }, [mutation, isbn])
 
     return (
         <AppLayout>
@@ -39,14 +80,29 @@ const Book = () => {
                         borderRadius: '8px',
                     }}
                 >
-                    <div style={{ padding: '10px 25px', userSelect: 'none' }}>
-                        <img src={id && !Array.isArray(id) ? bookImage[parseInt(id)] : undefined} />
+                    <div
+                        style={{
+                            padding: '10px 25px',
+                            userSelect: 'none',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        {/* <img src={id && !Array.isArray(id) ? bookImage[parseInt(id)] : undefined} /> */}
+                        <img src={bookInfo?.imgUrl} style={{ width: '130px' }} />
                     </div>
                     <div style={{ marginTop: '20px' }}>
-                        <div style={{ marginTop: '10px', fontSize: '24px', fontWeight: 'bold' }}>도서 제목</div>
-                        <div style={{ marginTop: '14px', fontSize: '18px' }}>작가 / 출판사</div>
-                        <div style={{ marginTop: '14px', fontSize: '11pt', height: '70px' }}>줄거리 ...</div>
+                        <div style={{ marginTop: '10px', fontSize: '24px', fontWeight: 'bold' }}>{bookInfo?.title}</div>
+                        <div style={{ marginTop: '14px', fontSize: '18px' }}>
+                            {bookInfo?.author} {bookInfo && '/'} {bookInfo?.publisher}
+                        </div>
+                        <div style={{ marginTop: '14px', fontSize: '11pt', height: '70px' }}>
+                            {(bookInfo ? bookInfo?.info?.slice(0, 100) : '') +
+                                (bookInfo?.info?.length > 100 ? ' ...' : '')}
+                        </div>
                         <div style={{ marginTop: '14px', marginBottom: '15px', display: 'flex', gap: '10px' }}>
+                            {/* TODO: rating에 맞게 보여줘야 함 */}
                             <Image src="/rating-star.png" width={40} height={40} />
                             <Image src="/rating-star.png" width={40} height={40} />
                             <Image src="/rating-star.png" width={40} height={40} />
@@ -65,14 +121,26 @@ const Book = () => {
                         alignItems: 'center',
                     }}
                 >
-                    <div style={{ display: 'inline-block', cursor: 'pointer' }}>
-                        <Image src="/save-icon.png" width={20} height={20} />
+                    <div style={{ display: 'inline-block', cursor: 'pointer' }} onClick={onClickLikesButton}>
+                        {isChecked ? (
+                            <Image src="/checked-save-icon.png" width={20} height={20} />
+                        ) : (
+                            <Image src="/save-icon.png" width={20} height={20} />
+                        )}
                     </div>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                        <span style={{ fontWeight: 'bold', fontSize: '18px', letterSpacing: '.7px' }}>21,000</span>
+                        <span style={{ fontWeight: 'bold', fontSize: '18px', letterSpacing: '.7px' }}>
+                            {bookInfo?.list_price}
+                        </span>
                         <span style={{ fontSize: '24px' }}> 원</span>
                     </div>
-                    <LinkButton>구매 링크</LinkButton>
+                    <LinkButton
+                        onClick={() => {
+                            window.open(`https://book.naver.com/search/search.naver?query=${bookInfo?.isbn}`, '_blank')
+                        }}
+                    >
+                        구매 링크
+                    </LinkButton>
                 </div>
             </div>
         </AppLayout>
