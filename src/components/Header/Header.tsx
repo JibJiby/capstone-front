@@ -98,15 +98,18 @@ function Header() {
                         </LogInOutButton>
                     ) : (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            {/* <div
+                            <div
                                 style={{
                                     cursor: 'pointer',
                                     marginLeft: '15px',
                                     marginRight: '15px',
                                 }}
+                                onClick={() => {
+                                    router.push('/myinfo')
+                                }}
                             >
                                 <Image src="/user-icon.png" width={32} height={32} />
-                            </div> */}
+                            </div>
                             <LogInOutButton onClick={onLogOut}>로그아웃</LogInOutButton>
                         </div>
                     )}

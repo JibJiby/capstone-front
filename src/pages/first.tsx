@@ -50,15 +50,7 @@ const First = () => {
                     padding: '10px 10px',
                 }}
             >
-                <BooksContainer
-                    style={
-                        {
-                            // grid
-                            // https://studiomeal.com/archives/533
-                            // gridTemplateRows: 'repeat(auto-fill, 300px)',
-                        }
-                    }
-                >
+                <BooksContainer>
                     {/* 원하는 레이아웃 */}
                     {/* https://heeyamsec.tistory.com/37 */}
                     {bookImage.map((v, i) => (
@@ -96,18 +88,17 @@ export default First
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
     console.log('first 페이지!!!')
-    
-    const cookie = context.req ? context.req.headers.cookie : '';
-    axios.defaults.headers.common.cookie = '';
+
+    const cookie = context.req ? context.req.headers.cookie : ''
+    axios.defaults.headers.common.cookie = ''
     if (context.req && cookie) {
-      axios.defaults.headers.common.cookie = cookie;
+        axios.defaults.headers.common.cookie = cookie
     }
 
     try {
         // FIXME: 내 정보 가져오는 거 말고, 최초 시행 유무 가져오기.
-        const data = await loadMyInfoAPI();
+        const data = await loadMyInfoAPI()
         if (data) {
-
             // FIXME: 리다이렉션 수 많은 문제
             // const isFirst = await isFirstAPI()
             // if(isFirst) {
@@ -117,17 +108,16 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             //             permanent: false,
             //         }
             //     }
-            // } 
+            // }
 
             // 이미 로그인한 상태라면
             return {
                 redirect: {
                     destination: '/',
                     permanent: false,
-                }
+                },
             }
         }
-
     } catch (err) {
         // 비로그인 상태라면 이대로.
         // FIXME: 여기서 항상 에러
@@ -137,7 +127,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             redirect: {
                 destination: '/about',
                 permanent: false,
-            }
-        };
+            },
+        }
     }
 }

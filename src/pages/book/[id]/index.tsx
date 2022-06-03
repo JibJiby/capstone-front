@@ -103,11 +103,13 @@ const Book = () => {
                         </div>
                         <div style={{ marginTop: '14px', marginBottom: '15px', display: 'flex', gap: '10px' }}>
                             {/* TODO: rating에 맞게 보여줘야 함 */}
-                            <Image src="/rating-star.png" width={40} height={40} />
-                            <Image src="/rating-star.png" width={40} height={40} />
-                            <Image src="/rating-star.png" width={40} height={40} />
-                            <Image src="/rating-star.png" width={40} height={40} />
-                            <Image src="/rating-star.png" width={40} height={40} />
+                            {bookInfo ? (
+                                Array(Math.round(bookInfo.average / 2))
+                                    .fill()
+                                    .map((_) => <Image src="/rating-star.png" width={40} height={40} />)
+                            ) : (
+                                <></>
+                            )}
                         </div>
                     </div>
                 </div>

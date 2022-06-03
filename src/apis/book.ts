@@ -18,6 +18,10 @@ export function loadRandomBookList(seed: number, numStart: number, numEnd: numbe
         .then((response) => response.data)
 }
 
+export function loadMyCheckedBookList() {
+    return axios.get(`/book/checkedlist`).then((response) => response.data)
+}
+
 export function confirmCheckedBookAPI(isbn: string) {
     return axios.get(`/book/checked?isbn=${isbn}`).then((response) => response.data)
 }
