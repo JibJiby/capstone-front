@@ -13,3 +13,7 @@ export function isFirstAPI() {
 export function toggleLikesAPI(isbn: string) {
     return axios.post('/likeslog/', { isbn }).then((response) => response.data)
 }
+
+export function checkFirstBooks(isbnList: Array<{ isbn: string }>) {
+    return axios.post('/likeslog/first', isbnList).then((response) => response.data)
+}

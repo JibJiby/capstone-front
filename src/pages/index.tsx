@@ -1,47 +1,64 @@
 import type { GetServerSidePropsContext, NextPage } from 'next'
 import AppLayout from '@components/AppLayout'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { bookImage } from '@data/fake-book'
 import BackTop from '@components/BackTop'
 import BooksContainer from '@components/BooksContainer'
 import axios from 'axios'
 import { loadMyInfoAPI } from '@apis/user'
 import { loadRandomBookList } from '@apis/book'
-import { useQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import styled from '@emotion/styled'
+import { isFirstAPI } from '@apis/likeslog'
 
-// { isCompleted }: { isCompleted: boolean }
 const Home = () => {
     const router = useRouter()
+    // const [numStart, setNumStart] = useState(0)
+    // const [numEnd, setNumEnd] = useState(39)
+    // const numStart = useRef(0)
+    // const numEnd = useRef(39)
 
-    // FIXME: seed 값을 일정한 규칙으로 가져오기 & localStorage에 임시 저장
-    // let tmpSeed: number
-    // if (sessionStorage.getItem('seed')) {
-    //     tmpSeed = Number(JSON.stringify(sessionStorage.getItem('seed')))
-    // } else {
-    //     tmpSeed = Number(sessionStorage.setItem('seed', JSON.stringify(Math.ceil(Math.random() * 100))))
-    // }
+    // TODO: sessionStorage
+    let tmpSeed = Math.ceil(Math.random() * 100)
 
-    const tmpSeed = Math.ceil(Math.random() * 100)
-    const { data: randomBooks } = useQuery(['ramdomBook'], () => loadRandomBookList(tmpSeed, 0, 99), {
+    // const tmpSeed = Math.ceil(Math.random() * 100)
+    const { data: randomBooks, fetchNextPage } = useInfiniteQuery(
+        ['ramdomBook'],
+        ({ pageParam = 0 }) => {
+            if (pageParam > 0) {
+                tmpSeed = Number(JSON.parse(sessionStorage.getItem('seed')!))
+            }
+            return loadRandomBookList(tmpSeed, 30 * pageParam, 30 * (pageParam + 1) - 1)
+        },
+        {
+            // key에 numStart, numEnd  제외한 이유는 처음 이후 리렌더링은 randomBook에서 하지 않게 하기 위해.
+            staleTime: 10 * 60 * 1000, // 단위 ms
+            refetchOnWindowFocus: false,
+
+            //infinite
+            getNextPageParam: (lastPage, pages) => 1,
+        },
+    )
+    const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
         staleTime: 30 * 60 * 1000, // 단위 ms
         refetchOnWindowFocus: false,
     })
 
-    const [myBooks, setMyBooks] = useState([...bookImage])
-
-    console.log('-----------------------')
-    console.log(randomBooks)
+    // console.log('-----------------------')
+    // console.log(randomBooks)
 
     useEffect(() => {
         function onScroll() {
             // scrollY는 현재 포인트(상단 기준)
             // clientHeight (간단히 브라우저 높이. 고정값)
             // scrollHeight (페이지 가장 아래. 고정값. 하단 기준)
-            if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-                // TODO: 더 불러오기 API (throttling)
-                console.log('더 불러왔음')
+            if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 400) {
+                //FIXME:
+                fetchNextPage().then((res) => {
+                    console.log('fetchnext')
+                    console.log(res.data)
+                })
             }
         }
         window.addEventListener('scroll', onScroll)
@@ -56,7 +73,16 @@ const Home = () => {
         window.onbeforeunload = function pushRefresh() {
             window.scrollTo(0, 0)
         }
+
+        sessionStorage.setItem('seed', JSON.stringify(tmpSeed))
     }, [])
+
+    useEffect(() => {
+        // TODO: ssr 로 이동
+        if (!!!isFirst) {
+            router.push('/')
+        }
+    }, [isFirst])
 
     return (
         <>
@@ -67,32 +93,38 @@ const Home = () => {
                     </ContainerHeader>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <BooksContainer style={{ margin: '0 15px' }}>
-                            {randomBooks?.map((v, i) => (
-                                <>
-                                    <div
-                                        key={v.imgUrl}
-                                        style={{
-                                            marginBottom: '50px',
-                                            display: 'flex',
-                                            justifyContent: 'center',
+                            {randomBooks?.pages
+                                // .flat()
+                                .map((page) =>
+                                    page
+                                        ?.sort((a, b) => a.tmpOrder - b.tmpOrder)
+                                        .map((v, i) => (
+                                            <>
+                                                <div
+                                                    key={v.imgUrl}
+                                                    style={{
+                                                        marginBottom: '50px',
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
 
-                                            userSelect: 'none',
-                                            position: 'relative',
-                                        }}
-                                    >
-                                        <img
-                                            src={v.imgUrl}
-                                            width="150px"
-                                            key={v.imgUrl}
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => {
-                                                console.log(v)
-                                                router.push(`/book/${v.isbn}`)
-                                            }}
-                                        />
-                                    </div>
-                                </>
-                            ))}
+                                                        userSelect: 'none',
+                                                        position: 'relative',
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={v.imgUrl}
+                                                        width="150px"
+                                                        key={v.imgUrl}
+                                                        style={{ cursor: 'pointer' }}
+                                                        onClick={() => {
+                                                            console.log(v)
+                                                            router.push(`/book/${v.isbn}`)
+                                                        }}
+                                                    />
+                                                </div>
+                                            </>
+                                        )),
+                                )}
                         </BooksContainer>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
 import { loadMyCheckedBookList } from '@apis/book'
 import AppLayout from '@components/AppLayout'
 import BooksContainer from '@components/BooksContainer'
+import styled from '@emotion/styled'
+import { Button } from 'antd'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect } from 'react'
 import { useQuery } from 'react-query'
@@ -19,6 +21,22 @@ function MyInfo() {
 
     return (
         <AppLayout>
+            {/* <div style={{ marginLeft: '130px' }}>
+                <div>
+                    <h3>나의 정보</h3>
+                </div>
+                <div>
+                    <EditingMyInfoButton
+                        onClick={() => {
+                            router.push('/editmyinfo')
+                        }}
+                    >
+                        {' '}
+                        수정하러 가기
+                    </EditingMyInfoButton>
+                </div>
+            </div> */}
+
             <div
                 style={{
                     display: 'flex',
@@ -27,7 +45,7 @@ function MyInfo() {
                     margin: '30px auto',
                 }}
             >
-                <h1>내가 찜한 도서들</h1>
+                <h2>내가 찜한 도서들</h2>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <BooksContainer style={{ margin: '0 15px' }}>
@@ -64,3 +82,16 @@ function MyInfo() {
 }
 
 export default MyInfo
+
+const EditingMyInfoButton = styled.button`
+    /* padding: '10px 15px', borderRadius: '8px', border: 'none' */
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.4;
+        transition: all 0.2s ease-in;
+    }
+`

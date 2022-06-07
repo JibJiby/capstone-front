@@ -3,14 +3,16 @@ import { loadMyInfoAPI } from '@apis/user'
 import { AxiosError } from 'axios'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { LogInOutButton } from './styles'
 
 function Header() {
     const router = useRouter()
     const queryClient = useQueryClient()
-    const { data: me } = useQuery('user', loadMyInfoAPI)
+    const { data: me, refetch } = useQuery('user', loadMyInfoAPI, {
+        staleTime: 30 * 60 * 1000, // ms
+    })
 
     const [loading, setLoading] = useState(false)
 
@@ -23,7 +25,7 @@ function Header() {
         },
         onSuccess: () => {
             queryClient.setQueryData('user', null)
-            router.push('/')
+            router.push('/about')
         },
         onSettled: () => {
             setLoading(false)
@@ -33,6 +35,10 @@ function Header() {
     const onLogOut = useCallback(() => {
         mutation.mutate()
     }, [mutation])
+
+    useEffect(() => {
+        refetch()
+    }, [])
 
     return (
         <div

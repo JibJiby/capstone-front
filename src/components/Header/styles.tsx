@@ -10,6 +10,7 @@ export const LogInOutButton = styled.div`
     &:hover {
         background-color: black;
         color: white;
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s ease-in;
+        border-color: black;
     }
 `
