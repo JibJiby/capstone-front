@@ -73,13 +73,6 @@ const Home = () => {
         sessionStorage.setItem('seed', JSON.stringify(tmpSeed))
     }, [])
 
-    useEffect(() => {
-        // TODO: ssr 로 이동
-        if (!!!isFirst) {
-            router.push('/')
-        }
-    }, [isFirst])
-
     return (
         <>
             <AppLayout>
@@ -164,11 +157,13 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         let statusCode = err.response.status
         console.log('loadMyInfo Error')
         console.log(statusCode)
+        console.error(err)
 
         if (statusCode === 401) {
             return {
                 redirect: {
                     destination: '/about',
+                    permanent: false,
                 },
             }
         }
