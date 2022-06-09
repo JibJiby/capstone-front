@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { bookImage } from '@data/fake-book'
 import BackTop from '@components/BackTop'
 import BooksContainer from '@components/BooksContainer'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { loadMyInfoAPI } from '@apis/user'
 import { loadRandomBookList } from '@apis/book'
 import { useInfiniteQuery, useQuery } from 'react-query'
@@ -91,7 +91,7 @@ const Home = () => {
                         <BooksContainer style={{ margin: '0 15px' }}>
                             {randomBooks?.pages
                                 // .flat()
-                                .map((page) =>
+                                ?.map((page) =>
                                     page
                                         ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
                                         .map((v: any, i: any) => (
@@ -140,42 +140,43 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 
     try {
-        const data = await loadMyInfoAPI()
-        if (!data) {
-            return {
-                // redirect: {
-                //     destination: '/about',
-                //     permanent: false,
-                // },
+        const data = await loadMyInfoAPI() // 401 에러
+        // console.log(' ============ getServerSideProps  data ============')
+        // console.log(data)
 
-                // FIXME:
+        const isFirst = await isFirstAPI()
+        console.log(' ============ getServerSideProps  isFirst ============')
+        console.log(typeof isFirst)
+        console.log(isFirst)
+
+        if (isFirst) {
+            return {
+                redirect: {
+                    destination: '/first',
+                },
+            }
+        } else {
+            return {
                 props: {},
             }
         }
+    } catch (err: any) {
+        let statusCode = err.response.status
+        console.log('loadMyInfo Error')
+        console.log(statusCode)
 
-        // FIXME: 무한 루프 문제 해결 필요.
-        // const isFirst = await isFirstAPI()
-        // if (isFirst) {
-        //     console.log('처음 --', isFirst)
-        //     return {
-        //         redirect: {
-        //             destination: '/first',
-        //             permanent: false,
-        //         },
-        //     }
-        // } else {
-        // }
-        return {
-            props: {},
+        if (statusCode === 401) {
+            return {
+                redirect: {
+                    destination: '/about',
+                },
+            }
         }
-    } catch (err) {
-        return {
-            // redirect: {
-            //     destination: '/about',
-            //     permanent: false,
-            // },
 
-            // FIXME:
+        // 이외의 케이스
+        console.error(statusCode)
+        return {
+            //
             props: {},
         }
     }

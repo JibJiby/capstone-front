@@ -1,6 +1,6 @@
 import AppLayout from '@components/AppLayout'
 import { bookImage } from '../data/fake-book'
-import { Progress } from 'antd'
+import { message, Progress } from 'antd'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import BooksContainer from '@components/BooksContainer'
@@ -24,11 +24,11 @@ const First = () => {
         staleTime: 30 * 60 * 1000, // 단위 ms
         refetchOnWindowFocus: false,
     })
-    const { data: isFirst } = useQuery('isfirst', isFirstAPI)
 
     const mutation = useMutation<Promise<any>, AxiosError, Array<{ isbn: string }>>(checkFirstBooks, {
         onMutate: () => {},
         onSuccess: () => {
+            message.info('선호 도서을 충분히 선택하셨습니다!')
             router.push('/')
         },
     })
@@ -36,13 +36,6 @@ const First = () => {
     const [count, setCount] = useState(0)
     const [checked, setChecked] = useState<Array<number>>([])
     const [btnDisabled, setBtnDisabled] = useState(false)
-
-    useEffect(() => {
-        // TODO: ssr 로 이동
-        if (isFirst) {
-            router.push('/first')
-        }
-    }, [isFirst])
 
     return (
         <AppLayout style={{ margin: '30px auto' }}>
@@ -58,7 +51,7 @@ const First = () => {
             </div>
 
             <ProgressContainer>
-                <Progress percent={count * maxCheckedValue} />
+                <Progress percent={Math.floor((count / maxCheckedValue) * 100)} />
             </ProgressContainer>
 
             <div
@@ -155,42 +148,43 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 
     try {
-        // // FIXME: 내 정보 가져오는 거 말고, 최초 시행 유무 가져오기.
-        // const data = await loadMyInfoAPI()
-        // if (data) {
-        //     // FIXME: 리다이렉션 수 많은 문제
-        //     // const isFirst = await isFirstAPI()
-        //     // if(isFirst) {
-        //     //     return {
-        //     //         redirect: {
-        //     //             destination: '/first',
-        //     //             permanent: false,
-        //     //         }
-        //     //     }
-        //     // }
+        const data = await loadMyInfoAPI() // 401 에러
+        // console.log(' ============ getServerSideProps  data ============')
+        // console.log(data)
 
-        //     // 이미 로그인한 상태라면
-        //     return {
-        //         redirect: {
-        //             destination: '/',
-        //             permanent: false,
-        //         },
-        //     }
-        // }
+        const isFirst = await isFirstAPI()
+        console.log(' ============ getServerSideProps  isFirst ============')
+        console.log(isFirst)
+
+        if (!isFirst) {
+            return {
+                redirect: {
+                    destination: '/',
+                },
+            }
+        }
 
         return {
             props: {},
         }
-    } catch (err) {
-        // 비로그인 상태라면 이대로.
-        // FIXME: 여기서 항상 에러
-        console.log('first 에러!!!!')
-        console.log(err)
+    } catch (err: any) {
+        let statusCode = err.response.status
+        console.log('loadMyInfo Error')
+        console.log(statusCode)
+
+        if (statusCode === 401) {
+            return {
+                redirect: {
+                    destination: '/about',
+                },
+            }
+        }
+
+        // 이외의 케이스
+        console.error(statusCode)
         return {
-            redirect: {
-                destination: '/about',
-                permanent: false,
-            },
+            //
+            props: {},
         }
     }
 }

@@ -9,6 +9,9 @@ import { useMutation } from 'react-query'
 import axios, { AxiosError } from 'axios'
 import { GetServerSidePropsContext } from 'next'
 import { loadMyInfoAPI } from '@apis/user'
+import { message } from 'antd'
+
+import 'antd/lib/notification/style/index.css'
 
 const Input = styled.input`
     width: 400px;
@@ -73,10 +76,11 @@ function Login() {
         },
         onError: (error) => {
             // 이메일 중복 확인 등 에러 마다 처리
+            message.warn('로그인을 실패하였습니다.')
             console.error(error.response?.data)
         },
         onSuccess: () => {
-            // queryClient.setQueryData('user', null)
+            message.info('로그인 성공하셨습니다!')
             router.push('/')
         },
         onSettled: () => {
