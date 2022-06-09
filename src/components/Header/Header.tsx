@@ -13,7 +13,7 @@ function Header() {
     const queryClient = useQueryClient()
 
     const { data: me, refetch } = useQuery('user', loadMyInfoAPI, {
-        staleTime: 30 * 60 * 1000, // ms
+        // staleTime: 30 * 60 * 1000, // ms
     })
 
     const [loading, setLoading] = useState(false)
