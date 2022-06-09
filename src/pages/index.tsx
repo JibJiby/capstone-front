@@ -14,10 +14,6 @@ import { isFirstAPI } from '@apis/likeslog'
 
 const Home = () => {
     const router = useRouter()
-    // const [numStart, setNumStart] = useState(0)
-    // const [numEnd, setNumEnd] = useState(39)
-    // const numStart = useRef(0)
-    // const numEnd = useRef(39)
 
     // TODO: sessionStorage
     let tmpSeed = Math.ceil(Math.random() * 100)

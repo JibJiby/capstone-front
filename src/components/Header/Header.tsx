@@ -5,11 +5,22 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { persistQueryClient } from 'react-query/persistQueryClient-experimental'
+import { createWebStoragePersistor } from 'react-query/createWebStoragePersistor-experimental'
+
 import { LogInOutButton } from './styles'
 
 function Header() {
     const router = useRouter()
     const queryClient = useQueryClient()
+
+    const sessionStoragePersistor = createWebStoragePersistor({ storage: window.sessionStorage })
+
+    persistQueryClient({
+        queryClient,
+        persistor: sessionStoragePersistor,
+    })
+
     const { data: me, refetch } = useQuery('user', loadMyInfoAPI, {
         staleTime: 30 * 60 * 1000, // ms
     })
