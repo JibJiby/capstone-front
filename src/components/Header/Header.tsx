@@ -16,6 +16,9 @@ function Header() {
         // staleTime: 30 * 60 * 1000, // ms
     })
 
+    console.log('===============me')
+    console.log(me)
+
     const [loading, setLoading] = useState(false)
 
     const mutation = useMutation<void, AxiosError>(logOutAPI, {
