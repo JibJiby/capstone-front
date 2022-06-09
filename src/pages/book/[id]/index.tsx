@@ -105,7 +105,7 @@ const Book = () => {
                             {/* TODO: rating에 맞게 보여줘야 함 */}
                             {bookInfo ? (
                                 Array(Math.round(bookInfo.average / 2))
-                                    .fill()
+                                    .fill(0)
                                     .map((_) => <Image src="/rating-star.png" width={40} height={40} />)
                             ) : (
                                 <></>
