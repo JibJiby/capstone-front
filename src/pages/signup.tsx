@@ -12,7 +12,9 @@ import useInput from '@hooks/useInput'
 import { AxiosError } from 'axios'
 import { signUpAPI } from '@apis/auth'
 import { GetServerSidePropsContext } from 'next'
+import { message } from 'antd'
 
+import 'antd/lib/notification/style/index.css'
 
 const Input = styled.input`
     width: 400px;
@@ -64,10 +66,11 @@ function Signup() {
             },
             onError: (error) => {
                 // 이메일 중복 확인 등 에러 마다 처리
+                message.warn('회원가입에 실패하였습니다.')
                 console.error(error.response?.data)
             },
             onSuccess: () => {
-                // queryClient.setQueryData('user', null)
+                message.info('회원가입에 성공하셨습니다!')
                 router.push('/login')
             },
             onSettled: () => {
@@ -93,8 +96,8 @@ function Signup() {
             setIdError(true)
         } else {
             const emailRegex =
-                /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-            if(!emailRegex.test(id)) {
+                /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+            if (!emailRegex.test(id)) {
                 setIdError(true)
             } else {
                 setIdError(false)
@@ -127,7 +130,7 @@ function Signup() {
         if (id !== '' && pw !== '' && pwConfirm !== '' && pw === pwConfirm && nickname !== '') {
             // 로그인 페이지로 이동
             // TODO: 로그인 중복 확인, 비밀번호 조건 충족 여부, 닉네임 중복 확인 API
-            mutation.mutate({email: id, password: pw, nickname})
+            mutation.mutate({ email: id, password: pw, nickname })
         }
     }, [id, pw, pwConfirm, nickname])
 
@@ -252,14 +255,14 @@ function Signup() {
 }
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-    const cookie = context.req ? context.req.headers.cookie : '';
-    axios.defaults.headers.common.cookie = '';
+    const cookie = context.req ? context.req.headers.cookie : ''
+    axios.defaults.headers.common.cookie = ''
     if (context.req && cookie) {
-      axios.defaults.headers.common.cookie = cookie;
+        axios.defaults.headers.common.cookie = cookie
     }
 
     try {
-        const data = await loadMyInfoAPI();
+        const data = await loadMyInfoAPI()
         console.log('load my info  :  ', data)
         if (!data) {
             return {
@@ -268,15 +271,13 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
                     destination: '/',
                     permanent: false,
                 },
-            };
+            }
         }
-
     } catch (err) {
         return {
-            props: {}
-        };
+            props: {},
+        }
     }
-
 }
 
 export default Signup
