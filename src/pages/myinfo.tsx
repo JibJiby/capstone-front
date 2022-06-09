@@ -49,7 +49,7 @@ function MyInfo() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <BooksContainer style={{ margin: '0 15px' }}>
-                    {myBooks?.map((v, i) => (
+                    {myBooks?.map((v: any, i: any) => (
                         <>
                             <div
                                 key={v.imgUrl}

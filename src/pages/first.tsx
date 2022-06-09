@@ -75,8 +75,8 @@ const First = () => {
                             // console.log(checked)
                             // console.log('-=----=-=--=-')
                             let checkedIsbnList = randomBooks
-                                .filter((v, i) => checked.includes(i))
-                                .map((v) => ({ isbn: v.isbn }))
+                                .filter((v: any, i: number) => checked.includes(i))
+                                .map((v: any) => ({ isbn: v.isbn }))
                             // console.log(checkedIsbnList)
                             mutation.mutate(checkedIsbnList)
                         }}
@@ -97,7 +97,7 @@ const First = () => {
                 }}
             >
                 <BooksContainer style={{ margin: '0 15px' }}>
-                    {randomBooks?.map((v, i) => (
+                    {randomBooks?.map((v: any, i: any) => (
                         <>
                             <div
                                 key={v.imgUrl}

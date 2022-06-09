@@ -93,8 +93,8 @@ const Home = () => {
                                 // .flat()
                                 .map((page) =>
                                     page
-                                        ?.sort((a, b) => a.tmpOrder - b.tmpOrder)
-                                        .map((v, i) => (
+                                        ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
+                                        .map((v: any, i: any) => (
                                             <>
                                                 <div
                                                     key={v.imgUrl}
