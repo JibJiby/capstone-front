@@ -6,7 +6,7 @@ import { globalStyles } from '@styles/globals'
 
 // import '@styles/antd.less'
 // https://stackoverflow.com/questions/60398647/ant-design-page-reloading-css-rendering-delay
-// import 'antd/dist/antd.css'
+import 'antd/dist/antd.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const queryClientRef = useRef<QueryClient>()
