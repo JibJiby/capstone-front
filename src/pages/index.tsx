@@ -142,7 +142,10 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 
     try {
+        console.log('~~~~~~~~~~DATA~~~~~~~~~~')
         const data = await loadMyInfoAPI()
+        console.log(data)
+
         if (data) {
             return {
                 props: {},
