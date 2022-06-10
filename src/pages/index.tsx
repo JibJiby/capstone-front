@@ -68,9 +68,9 @@ const Home = ({ err }: { err: any }) => {
     useEffect(() => {
         console.log('][][][][][][]][][]isFirst][]][][][][][][][][]][]')
         console.log(isFirst)
-        // 초기  undefined
-        // true
-        // false
+        if(isFirst === true) {
+            router.push('/first')
+        }
     }, [isFirst])
 
     return (
