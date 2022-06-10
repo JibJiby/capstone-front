@@ -51,7 +51,7 @@ const errorMessageStyle = css`
     font-size: 14px;
 `
 
-function Login() {
+function Login({ err }: { err: any }) {
     const router = useRouter()
 
     const [id, onChangeId] = useInput('')
@@ -60,6 +60,9 @@ function Login() {
     const [idError, setIdError] = useState(false)
     const [pwError, setPwError] = useState(false)
     const [loading, setLoading] = useState(false)
+
+    console.log('=-=-=-=-=-===-err=-=-=-=-=-=')
+    console.log(err)
 
     const onPressPw = useCallback(
         (e) => {
@@ -76,12 +79,12 @@ function Login() {
         },
         onError: (error) => {
             // 이메일 중복 확인 등 에러 마다 처리
-            message.warn('로그인을 실패하였습니다.')
             console.error(error.response?.data)
+            message.warn('로그인을 실패하였습니다.')
         },
         onSuccess: () => {
-            message.info('로그인 성공하셨습니다!')
             router.push('/')
+            message.info('로그인 성공하셨습니다!')
         },
         onSettled: () => {
             setLoading(false)
@@ -194,7 +197,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     } catch (err) {
         // 비로그인 상태라면 이대로.
         return {
-            props: {},
+            props: { err },
         }
     }
 }
