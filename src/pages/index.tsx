@@ -144,6 +144,10 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     if (context.req && cookie) {
         axios.defaults.headers.common.cookie = cookie
     }
+
+    return {
+        props: {},
+    }
 }
 
 const ContainerHeader = styled.div`
