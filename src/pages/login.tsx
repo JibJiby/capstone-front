@@ -2,10 +2,10 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import useInput from '@hooks/useInput'
 import styled from '@emotion/styled'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { logInAPI } from '@apis/auth'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import axios, { AxiosError } from 'axios'
 import { GetServerSidePropsContext } from 'next'
 import { loadMyInfoAPI } from '@apis/user'
@@ -61,6 +61,10 @@ function Login({ err }: { err: any }) {
     const [pwError, setPwError] = useState(false)
     const [loading, setLoading] = useState(false)
 
+    const { data: me, refetch } = useQuery('user', loadMyInfoAPI, {
+        // staleTime: 30 * 60 * 1000, // ms
+    })
+
     console.log('=-=-=-=-=-===-err=-=-=-=-=-=')
     console.log(err)
 
@@ -115,6 +119,12 @@ function Login({ err }: { err: any }) {
             mutation.mutate({ email: id, password: pw })
         }
     }, [id, pw])
+
+    useEffect(() => {
+        if (me !== undefined) {
+            router.push('/')
+        }
+    }, [me])
 
     return (
         <div
