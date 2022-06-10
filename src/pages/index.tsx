@@ -2,7 +2,6 @@ import type { GetServerSidePropsContext, NextPage } from 'next'
 import AppLayout from '@components/AppLayout'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
-import { bookImage } from '@data/fake-book'
 import BackTop from '@components/BackTop'
 import BooksContainer from '@components/BooksContainer'
 import axios, { AxiosError } from 'axios'
@@ -11,12 +10,13 @@ import { loadRandomBookList } from '@apis/book'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import styled from '@emotion/styled'
 import { isFirstAPI } from '@apis/likeslog'
+import ClipLoader from 'react-spinners/ClipLoader'
 
 const Home = ({ err }: { err: any }) => {
     const router = useRouter()
 
-    console.log('=-=-==--=-==-==--err=-=-==--=-==-==--')
-    console.log(err)
+    // console.log('=-=-==--=-==-==--err=-=-==--=-==-==--')
+    // console.log(err)
 
     let tmpSeed = Math.ceil(Math.random() * 100)
 
@@ -68,12 +68,15 @@ const Home = ({ err }: { err: any }) => {
     useEffect(() => {
         console.log('][][][][][][]][][]isFirst][]][][][][][][][][]][]')
         console.log(isFirst)
+        // 초기  undefined
+        // true
+        // false
     }, [isFirst])
 
     return (
         <>
             <AppLayout>
-                <div>
+                {isFirst === undefined ? <ClipLoader loading /> : isFirst === false ? ( <div>
                     <ContainerHeader>
                         <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
                     </ContainerHeader>
@@ -111,7 +114,8 @@ const Home = ({ err }: { err: any }) => {
                             )}
                         </BooksContainer>
                     </div>
-                </div>
+                </div>) : (null)}
+               
             </AppLayout>
             <BackTop limit={500} />
         </>
