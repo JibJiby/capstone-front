@@ -79,8 +79,8 @@ const First = ({ err }: { err: any }) => {
                             // console.log(checked)
                             // console.log('-=----=-=--=-')
                             let checkedIsbnList = randomBooks
-                                .filter((v: any, i: number) => checked.includes(i))
-                                .map((v: any) => ({ isbn: v.isbn }))
+                                ?.filter((v: any, i: number) => checked.includes(i))
+                                ?.map((v: any) => ({ isbn: v.isbn }))
                             // console.log(checkedIsbnList)
                             mutation.mutate(checkedIsbnList)
                         }}
