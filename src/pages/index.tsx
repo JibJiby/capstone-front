@@ -7,16 +7,13 @@ import BooksContainer from '@components/BooksContainer'
 import axios, { AxiosError } from 'axios'
 import { loadMyInfoAPI } from '@apis/user'
 import { loadRandomBookList } from '@apis/book'
-import { useInfiniteQuery, useQuery } from 'react-query'
+import { QueryClient, useInfiniteQuery, useQuery } from 'react-query'
 import styled from '@emotion/styled'
 import { isFirstAPI } from '@apis/likeslog'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-const Home = ({ err }: { err: any }) => {
+const Home = () => {
     const router = useRouter()
-
-    // console.log('=-=-==--=-==-==--err=-=-==--=-==-==--')
-    // console.log(err)
 
     let tmpSeed = Math.ceil(Math.random() * 100)
 
@@ -75,8 +72,7 @@ const Home = ({ err }: { err: any }) => {
 
     return (
         <>
-            {isFirst === undefined ? (
-                <div
+            {/* <div
                     style={{
                         backgroundColor: '#e9ecef',
                         width: '100%',
@@ -87,50 +83,50 @@ const Home = ({ err }: { err: any }) => {
                     }}
                 >
                     <ClipLoader loading />
-                </div>
-            ) : isFirst === false ? (
-                <AppLayout>
-                    <div>
-                        <ContainerHeader>
-                            <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
-                        </ContainerHeader>
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <BooksContainer style={{ margin: '0 15px' }}>
-                                {randomBooks?.pages?.map((page) =>
-                                    page
-                                        ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
-                                        .map((v: any, i: any) => (
-                                            <>
-                                                <div
-                                                    key={v.imgUrl}
-                                                    style={{
-                                                        marginBottom: '50px',
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
+                </div> */}
 
-                                                        userSelect: 'none',
-                                                        position: 'relative',
+            <AppLayout>
+                <div>
+                    <ContainerHeader>
+                        <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
+                    </ContainerHeader>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <BooksContainer style={{ margin: '0 15px' }}>
+                            {randomBooks?.pages?.map((page) =>
+                                page
+                                    ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
+                                    .map((v: any, i: any) => (
+                                        <>
+                                            <div
+                                                key={v.imgUrl}
+                                                style={{
+                                                    marginBottom: '50px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+
+                                                    userSelect: 'none',
+                                                    position: 'relative',
+                                                }}
+                                            >
+                                                <img
+                                                    src={v.imgUrl}
+                                                    width="150px"
+                                                    key={v.imgUrl}
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => {
+                                                        console.log(v)
+                                                        router.push(`/book/${v.isbn}`)
                                                     }}
-                                                >
-                                                    <img
-                                                        src={v.imgUrl}
-                                                        width="150px"
-                                                        key={v.imgUrl}
-                                                        style={{ cursor: 'pointer' }}
-                                                        onClick={() => {
-                                                            console.log(v)
-                                                            router.push(`/book/${v.isbn}`)
-                                                        }}
-                                                    />
-                                                </div>
-                                            </>
-                                        )),
-                                )}
-                            </BooksContainer>
-                        </div>
+                                                />
+                                            </div>
+                                        </>
+                                    )),
+                            )}
+                        </BooksContainer>
                     </div>
-                </AppLayout>
-            ) : null}
+                </div>
+            </AppLayout>
+
             <BackTop limit={500} />
         </>
     )
@@ -143,6 +139,32 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     axios.defaults.headers.common.cookie = ''
     if (context.req && cookie) {
         axios.defaults.headers.common.cookie = cookie
+    }
+
+    try {
+        const data = await loadMyInfoAPI()
+        if (data) {
+            return {
+                props: {},
+            }
+        }
+        return {
+            redirect: {
+                destination: '/about',
+                permanent: false,
+            },
+        }
+    } catch (err) {
+        // 비로그인 상태라면 이대로.
+
+        console.error(err)
+
+        return {
+            redirect: {
+                destination: '/about',
+                permanent: false,
+            },
+        }
     }
 
     return {

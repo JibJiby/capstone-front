@@ -121,12 +121,6 @@ function Login({ err }: { err: any }) {
         }
     }, [id, pw])
 
-    useEffect(() => {
-        if (me !== undefined) {
-            router.push('/')
-        }
-    }, [me])
-
     return (
         <div
             style={{
@@ -203,12 +197,14 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             }
         }
         return {
-            props: {},
+            redirect: {
+                destination: '/about',
+                permanent: false,
+            },
         }
-    } catch (err) {
-        // 비로그인 상태라면 이대로.
+    } catch (error) {
         return {
-            props: { err },
+            props: {},
         }
     }
 }
