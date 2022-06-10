@@ -68,55 +68,60 @@ const Home = ({ err }: { err: any }) => {
     useEffect(() => {
         console.log('][][][][][][]][][]isFirst][]][][][][][][][][]][]')
         console.log(isFirst)
-        if(isFirst === true) {
+        if (isFirst === true) {
             router.push('/first')
         }
     }, [isFirst])
 
     return (
         <>
-            <AppLayout>
-                {isFirst === undefined ? <ClipLoader loading /> : isFirst === false ? ( <div>
-                    <ContainerHeader>
-                        <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
-                    </ContainerHeader>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <BooksContainer style={{ margin: '0 15px' }}>
-                            {randomBooks?.pages?.map((page) =>
-                                page
-                                    ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
-                                    .map((v: any, i: any) => (
-                                        <>
-                                            <div
-                                                key={v.imgUrl}
-                                                style={{
-                                                    marginBottom: '50px',
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-
-                                                    userSelect: 'none',
-                                                    position: 'relative',
-                                                }}
-                                            >
-                                                <img
-                                                    src={v.imgUrl}
-                                                    width="150px"
+            {isFirst === undefined ? (
+                <div style={{ backgroundColor: '#e9ecef', width: '100%', height: '100%' }}>
+                    <ClipLoader loading />
+                </div>
+            ) : isFirst === false ? (
+                <AppLayout>
+                    <div>
+                        <ContainerHeader>
+                            <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
+                        </ContainerHeader>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <BooksContainer style={{ margin: '0 15px' }}>
+                                {randomBooks?.pages?.map((page) =>
+                                    page
+                                        ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
+                                        .map((v: any, i: any) => (
+                                            <>
+                                                <div
                                                     key={v.imgUrl}
-                                                    style={{ cursor: 'pointer' }}
-                                                    onClick={() => {
-                                                        console.log(v)
-                                                        router.push(`/book/${v.isbn}`)
+                                                    style={{
+                                                        marginBottom: '50px',
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+
+                                                        userSelect: 'none',
+                                                        position: 'relative',
                                                     }}
-                                                />
-                                            </div>
-                                        </>
-                                    )),
-                            )}
-                        </BooksContainer>
+                                                >
+                                                    <img
+                                                        src={v.imgUrl}
+                                                        width="150px"
+                                                        key={v.imgUrl}
+                                                        style={{ cursor: 'pointer' }}
+                                                        onClick={() => {
+                                                            console.log(v)
+                                                            router.push(`/book/${v.isbn}`)
+                                                        }}
+                                                    />
+                                                </div>
+                                            </>
+                                        )),
+                                )}
+                            </BooksContainer>
+                        </div>
                     </div>
-                </div>) : (null)}
-               
-            </AppLayout>
+                </AppLayout>
+            ) : null}
             <BackTop limit={500} />
         </>
     )
