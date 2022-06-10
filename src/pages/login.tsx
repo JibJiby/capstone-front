@@ -66,6 +66,7 @@ function Login({ err }: { err: any }) {
     })
 
     console.log('=-=-=-=-=-===-err=-=-=-=-=-=')
+    console.log(me)
     console.log(err)
 
     const onPressPw = useCallback(
