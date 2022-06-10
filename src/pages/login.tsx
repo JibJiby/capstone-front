@@ -180,23 +180,16 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
     try {
         const data = await loadMyInfoAPI()
-        if (!data) {
-            // 이 경우는 없을 듯.
-            // return {
-            //     redirect: {
-            //         //
-            //         destination: '/',
-            //         permanent: false,
-            //     },
-            // };
-        } else {
-            // 이미 로그인한 상태라면
+        if (data) {
             return {
                 redirect: {
                     destination: '/',
                     permanent: false,
                 },
             }
+        }
+        return {
+            props: {},
         }
     } catch (err) {
         // 비로그인 상태라면 이대로.
