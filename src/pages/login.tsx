@@ -187,7 +187,12 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 
     try {
-        const data = await loadMyInfoAPI()
+        // const data = await loadMyInfoAPI()
+        console.log('서버 사이드 user 정보 가져오기')
+        const { data } = await axios.get('/user', { withCredentials: true })
+        console.log(data)
+        console.log('------------------------------------')
+
         if (data) {
             return {
                 redirect: {
@@ -203,6 +208,10 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             },
         }
     } catch (error) {
+        console.log('login 에러 상태')
+
+        console.log('===============================')
+
         return {
             props: {},
         }
