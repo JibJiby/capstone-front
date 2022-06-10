@@ -169,7 +169,11 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         console.error(statusCode)
         return {
             // TODO: 여기가 문제
-            props: {},
+            // props: {},
+            redirect: {
+                destination: '/about',
+                permanent: false,
+            },
         }
     }
 
