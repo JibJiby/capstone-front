@@ -16,7 +16,7 @@ import styled from '@emotion/styled'
 
 const maxCheckedValue = 20
 
-const First = () => {
+const First = ({ err }: { err: any }) => {
     const router = useRouter()
 
     const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
@@ -181,19 +181,19 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         console.log('loadMyInfo Error')
         console.log(statusCode)
 
-        if (statusCode === 401) {
-            return {
-                redirect: {
-                    destination: '/about',
-                },
-            }
-        }
+        // if (statusCode === 401) {
+        //     return {
+        //         redirect: {
+        //             destination: '/about',
+        //         },
+        //     }
+        // }
 
         // 이외의 케이스
         console.error(statusCode)
         return {
             //
-            props: {},
+            props: { err },
         }
     }
 }
