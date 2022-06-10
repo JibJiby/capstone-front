@@ -183,12 +183,13 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     const cookie = context.req ? context.req.headers.cookie : ''
     axios.defaults.headers.common.cookie = ''
     if (context.req && cookie) {
+        console.log('쿠키 장착...')
         axios.defaults.headers.common.cookie = cookie
     }
 
     try {
-        // const data = await loadMyInfoAPI()
         console.log('서버 사이드 user 정보 가져오기')
+        // const data = await loadMyInfoAPI()
         const { data } = await axios.get('/user', { withCredentials: true })
         console.log(data)
         console.log('------------------------------------')
