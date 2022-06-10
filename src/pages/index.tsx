@@ -146,9 +146,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         console.error(statusCode)
         return {
             //
-            props: {
-                err,
-            },
+            props: {},
         }
     }
 
