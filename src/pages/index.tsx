@@ -76,7 +76,16 @@ const Home = ({ err }: { err: any }) => {
     return (
         <>
             {isFirst === undefined ? (
-                <div style={{ backgroundColor: '#e9ecef', width: '100%', height: '100%' }}>
+                <div
+                    style={{
+                        backgroundColor: '#e9ecef',
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
                     <ClipLoader loading />
                 </div>
             ) : isFirst === false ? (
