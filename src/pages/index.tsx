@@ -37,8 +37,8 @@ const Home = ({ err }: { err: any }) => {
         },
     )
     const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
-        staleTime: 30 * 60 * 1000, // 단위 ms
-        refetchOnWindowFocus: false,
+        // staleTime: 30 * 60 * 1000, // 단위 ms
+        // refetchOnWindowFocus: false,
     })
 
     useEffect(() => {
@@ -65,11 +65,10 @@ const Home = ({ err }: { err: any }) => {
         sessionStorage.setItem('seed', JSON.stringify(tmpSeed))
     }, [])
 
-    // useEffect(() => {
-    //     if (isFirst) {
-    //         router.push('/first')
-    //     }
-    // }, [isFirst])
+    useEffect(() => {
+        console.log('][][][][][][]][][]isFirst][]][][][][][][][][]][]')
+        console.log(isFirst)
+    }, [isFirst])
 
     return (
         <>
