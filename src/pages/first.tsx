@@ -139,8 +139,6 @@ const First = () => {
 export default First
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-    console.log('first 페이지!!!')
-
     const cookie = context.req ? context.req.headers.cookie : ''
     axios.defaults.headers.common.cookie = ''
     if (context.req && cookie) {
