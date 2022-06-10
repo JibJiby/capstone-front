@@ -141,6 +141,9 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         axios.defaults.headers.common.cookie = cookie
     }
 
+    console.log('cookie')
+    console.log(cookie)
+
     try {
         console.log('~~~~~~~~~~DATA~~~~~~~~~~')
         const data = await loadMyInfoAPI()
@@ -159,11 +162,11 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         }
     } catch (err: any) {
         // 비로그인 상태라면 이대로.
-        let statusCode = err?.response?.status
-        console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
-        console.log(err?.response)
-        console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
-        console.error(err)
+        // let statusCode = err?.response?.status
+        // console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
+        // console.log(err?.response)
+        // console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
+        // console.error(err)
 
         return {
             redirect: {

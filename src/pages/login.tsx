@@ -65,9 +65,9 @@ function Login({ err }: { err: any }) {
         // staleTime: 30 * 60 * 1000, // ms
     })
 
-    console.log('=-=-=-=-=-===-err=-=-=-=-=-=')
-    console.log(me)
-    console.log(err)
+    // console.log('=-=-=-=-=-===-err=-=-=-=-=-=')
+    // console.log(me)
+    // console.log(err)
 
     const onPressPw = useCallback(
         (e) => {
