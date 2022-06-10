@@ -65,6 +65,12 @@ const Home = ({ err }: { err: any }) => {
         sessionStorage.setItem('seed', JSON.stringify(tmpSeed))
     }, [])
 
+    useEffect(() => {
+        if (isFirst) {
+            router.push('/first')
+        }
+    }, [isFirst])
+
     return (
         <>
             <AppLayout>
@@ -145,7 +151,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         // 이외의 케이스
         console.error(statusCode)
         return {
-            //
+            // TODO: 여기가 문제
             props: {},
         }
     }

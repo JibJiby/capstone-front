@@ -19,6 +19,11 @@ const maxCheckedValue = 20
 const First = () => {
     const router = useRouter()
 
+    const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
+        staleTime: 30 * 60 * 1000, // 단위 ms
+        refetchOnWindowFocus: false,
+    })
+
     const tmpSeed = Math.ceil(Math.random() * 100)
     const { data: randomBooks } = useQuery(['ramdomBook'], () => loadRandomBookList(tmpSeed, 0, 99), {
         staleTime: 30 * 60 * 1000, // 단위 ms
@@ -36,6 +41,12 @@ const First = () => {
     const [count, setCount] = useState(0)
     const [checked, setChecked] = useState<Array<number>>([])
     const [btnDisabled, setBtnDisabled] = useState(false)
+
+    useEffect(() => {
+        if (isFirst === false) {
+            router.push('/')
+        }
+    }, [isFirst])
 
     return (
         <AppLayout style={{ margin: '30px auto' }}>
