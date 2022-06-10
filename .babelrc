@@ -8,6 +8,7 @@
         "importSource": "@emotion/react"
       }
     }]],
+    "plugins": ["@emotion/babel-plugin"],
 
     
     // css 파일 임포트 안하는 방식

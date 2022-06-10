@@ -20,7 +20,6 @@ const Home = ({ err }: { err: any }) => {
 
     let tmpSeed = Math.ceil(Math.random() * 100)
 
-    // const tmpSeed = Math.ceil(Math.random() * 100)
     const { data: randomBooks, fetchNextPage } = useInfiniteQuery(
         ['ramdomBook'],
         ({ pageParam = 0 }) => {
@@ -44,13 +43,8 @@ const Home = ({ err }: { err: any }) => {
 
     useEffect(() => {
         function onScroll() {
-            // scrollY는 현재 포인트(상단 기준)
-            // clientHeight (간단히 브라우저 높이. 고정값)
-            // scrollHeight (페이지 가장 아래. 고정값. 하단 기준)
             if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 400) {
-                //FIXME:
                 fetchNextPage().then((res) => {
-                    console.log('fetchnext')
                     console.log(res.data)
                 })
             }
@@ -132,7 +126,33 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         const data = await loadMyInfoAPI() // 401 에러
         // console.log(' ============ getServerSideProps  data ============')
         // console.log(data)
+    } catch (err: any) {
+        let statusCode = err.response.status
+        console.log('loadMyInfo Error')
+        console.log(statusCode)
+        // console.error(err)
 
+        // if (statusCode === 401) {
+        //     return {
+        //         // FIXME:
+        //         redirect: {
+        //             destination: '/about',
+        //             permanent: false,
+        //         },
+        //     }
+        // }
+
+        // 이외의 케이스
+        console.error(statusCode)
+        return {
+            //
+            props: {
+                err,
+            },
+        }
+    }
+
+    try {
         const isFirst = await isFirstAPI()
         console.log(' ============ getServerSideProps  isFirst ============')
         console.log(typeof isFirst)
@@ -151,20 +171,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         }
     } catch (err: any) {
         let statusCode = err.response.status
-        console.log('loadMyInfo Error')
-        console.log(statusCode)
-        console.error(err)
-
-        // if (statusCode === 401) {
-        //     return {
-        //         // FIXME:
-        //         redirect: {
-        //             destination: '/about',
-        //             permanent: false,
-        //         },
-        //     }
-        // }
-
         // 이외의 케이스
         console.error(statusCode)
         return {
