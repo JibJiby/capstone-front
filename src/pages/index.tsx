@@ -144,67 +144,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     if (context.req && cookie) {
         axios.defaults.headers.common.cookie = cookie
     }
-
-    try {
-        const data = await loadMyInfoAPI() // 401 에러
-        // console.log(' ============ getServerSideProps  data ============')
-        // console.log(data)
-    } catch (err: any) {
-        let statusCode = err?.response?.status
-        console.log('loadMyInfo Error')
-        console.log(statusCode)
-        // console.error(err)
-
-        // if (statusCode === 401) {
-        //     return {
-        //         // FIXME:
-        //         redirect: {
-        //             destination: '/about',
-        //             permanent: false,
-        //         },
-        //     }
-        // }
-
-        // 이외의 케이스
-        console.error(statusCode)
-        return {
-            // TODO: 여기가 문제
-            // props: {},
-            redirect: {
-                destination: '/about',
-                permanent: false,
-            },
-        }
-    }
-
-    try {
-        const isFirst = await isFirstAPI()
-        console.log(' ============ getServerSideProps  isFirst ============')
-        console.log(typeof isFirst)
-        console.log(isFirst)
-
-        if (isFirst) {
-            return {
-                redirect: {
-                    destination: '/first',
-                },
-            }
-        } else {
-            return {
-                props: {},
-            }
-        }
-    } catch (err: any) {
-        let statusCode = err?.response?.status
-        // 이외의 케이스
-        console.error(statusCode)
-        return {
-            //
-            props: {
-                err,
-            },
-        }
-    }
 }
 
 const ContainerHeader = styled.div`
