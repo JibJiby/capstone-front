@@ -65,11 +65,11 @@ const Home = ({ err }: { err: any }) => {
         sessionStorage.setItem('seed', JSON.stringify(tmpSeed))
     }, [])
 
-    useEffect(() => {
-        if (isFirst) {
-            router.push('/first')
-        }
-    }, [isFirst])
+    // useEffect(() => {
+    //     if (isFirst) {
+    //         router.push('/first')
+    //     }
+    // }, [isFirst])
 
     return (
         <>
@@ -133,7 +133,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         // console.log(' ============ getServerSideProps  data ============')
         // console.log(data)
     } catch (err: any) {
-        let statusCode = err.response.status
+        let statusCode = err?.response?.status
         console.log('loadMyInfo Error')
         console.log(statusCode)
         // console.error(err)
@@ -174,7 +174,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             }
         }
     } catch (err: any) {
-        let statusCode = err.response.status
+        let statusCode = err?.response?.status
         // 이외의 케이스
         console.error(statusCode)
         return {
