@@ -17,8 +17,8 @@ function Header({ me }: { me?: any }) {
     })
     console.log('헤더 data')
     console.log(headerMe)
-    console.log('!me || !headerMe')
-    console.log(!me || !headerMe)
+    console.log('!me && !headerMe')
+    console.log(!me && !headerMe)
 
     const [loading, setLoading] = useState(false)
 
@@ -83,23 +83,7 @@ function Header({ me }: { me?: any }) {
                     <Image src="/logo.svg" width={100} height={50} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    {/* <div
-                        style={{
-                            // marginRight: '40px',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            fontWeight: 'bold',
-
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => {
-                            router.push('/best')
-                        }}
-                    >
-                        베스트셀러
-                    </div> */}
-                    {!me && !headerMe ? (
+                    {/* {!me && !headerMe ? (
                         <LogInOutButton
                             onClick={() => {
                                 router.push('/login')
@@ -124,7 +108,23 @@ function Header({ me }: { me?: any }) {
                             </div>
                             <LogInOutButton onClick={onLogOut}>로그아웃</LogInOutButton>
                         </div>
-                    )}
+                    )} */}
+                    {/* FIXME: */}
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <div
+                            style={{
+                                cursor: 'pointer',
+                                marginLeft: '15px',
+                                marginRight: '15px',
+                            }}
+                            onClick={() => {
+                                router.push('/myinfo')
+                            }}
+                        >
+                            <Image src="/user-icon.png" width={32} height={32} />
+                        </div>
+                        <LogInOutButton onClick={onLogOut}>로그아웃</LogInOutButton>
+                    </div>
                 </div>
             </div>
         </div>

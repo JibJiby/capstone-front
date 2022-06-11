@@ -15,6 +15,10 @@ import ClipLoader from 'react-spinners/ClipLoader'
 const Home = ({ me }: { me?: any }) => {
     const router = useRouter()
 
+    const { data: headerMe } = useQuery('user', loadMyInfoAPI, {
+        // staleTime: 30 * 1000, // ms
+    })
+
     let tmpSeed = Math.ceil(Math.random() * 100)
 
     const { data: randomBooks, fetchNextPage } = useInfiniteQuery(
@@ -72,7 +76,7 @@ const Home = ({ me }: { me?: any }) => {
 
     return (
         <>
-            {isFirst !== false ? (
+            {isFirst !== false || !headerMe ? (
                 <div
                     style={{
                         backgroundColor: '#e9ecef',
