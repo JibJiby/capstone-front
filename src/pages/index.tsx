@@ -142,7 +142,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 
     console.log('cookie')
-    console.log(cookie)
+    // console.log(cookie)
     const sessionCookie = cookie
         ?.split(';')
         .map((v) => v.trim())
