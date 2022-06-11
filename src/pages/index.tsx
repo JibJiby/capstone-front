@@ -26,7 +26,7 @@ const Home = ({ me }: { me?: any }) => {
             return loadRandomBookList(tmpSeed, 30 * pageParam, 30 * (pageParam + 1) - 1)
         },
         {
-            staleTime: 10 * 60 * 1000, // 단위 ms
+            cacheTime: 10 * 60 * 1000, // 단위 ms
             refetchOnWindowFocus: false,
 
             //infinite
@@ -72,7 +72,8 @@ const Home = ({ me }: { me?: any }) => {
 
     return (
         <>
-            {/* <div
+            {isFirst !== false ? (
+                <div
                     style={{
                         backgroundColor: '#e9ecef',
                         width: '100%',
@@ -83,51 +84,52 @@ const Home = ({ me }: { me?: any }) => {
                     }}
                 >
                     <ClipLoader loading />
-                </div> */}
-
-            <AppLayout me={me}>
-                <div>
-                    <ContainerHeader>
-                        <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
-                    </ContainerHeader>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <BooksContainer style={{ margin: '0 15px' }}>
-                            {randomBooks?.pages && randomBooks?.pages instanceof Array
-                                ? randomBooks?.pages?.map((page) =>
-                                      page
-                                          ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
-                                          ?.map((v: any, i: any) => (
-                                              <>
-                                                  <div
-                                                      key={v.imgUrl}
-                                                      style={{
-                                                          marginBottom: '50px',
-                                                          display: 'flex',
-                                                          justifyContent: 'center',
-
-                                                          userSelect: 'none',
-                                                          position: 'relative',
-                                                      }}
-                                                  >
-                                                      <img
-                                                          src={v.imgUrl}
-                                                          width="150px"
-                                                          key={v.imgUrl}
-                                                          style={{ cursor: 'pointer' }}
-                                                          onClick={() => {
-                                                              console.log(v)
-                                                              router.push(`/book/${v.isbn}`)
-                                                          }}
-                                                      />
-                                                  </div>
-                                              </>
-                                          )),
-                                  )
-                                : null}
-                        </BooksContainer>
-                    </div>
                 </div>
-            </AppLayout>
+            ) : (
+                <AppLayout me={me}>
+                    <div>
+                        <ContainerHeader>
+                            <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
+                        </ContainerHeader>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <BooksContainer style={{ margin: '0 15px' }}>
+                                {randomBooks?.pages && randomBooks?.pages instanceof Array
+                                    ? randomBooks?.pages?.map((page) =>
+                                          page
+                                              ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
+                                              ?.map((v: any, i: any) => (
+                                                  <>
+                                                      <div
+                                                          key={v.imgUrl}
+                                                          style={{
+                                                              marginBottom: '50px',
+                                                              display: 'flex',
+                                                              justifyContent: 'center',
+
+                                                              userSelect: 'none',
+                                                              position: 'relative',
+                                                          }}
+                                                      >
+                                                          <img
+                                                              src={v.imgUrl}
+                                                              width="150px"
+                                                              key={v.imgUrl}
+                                                              style={{ cursor: 'pointer' }}
+                                                              onClick={() => {
+                                                                  console.log(v)
+                                                                  router.push(`/book/${v.isbn}`)
+                                                              }}
+                                                          />
+                                                      </div>
+                                                  </>
+                                              )),
+                                      )
+                                    : null}
+                            </BooksContainer>
+                        </div>
+                    </div>
+                </AppLayout>
+            )}
 
             <BackTop limit={500} />
         </>

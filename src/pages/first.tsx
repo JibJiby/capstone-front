@@ -10,25 +10,46 @@ import { loadMyInfoAPI } from '@apis/user'
 import { checkFirstBooks, isFirstAPI } from '@apis/likeslog'
 
 import 'antd/lib/progress/style/index.css'
-import { useMutation, useQuery } from 'react-query'
+import { useInfiniteQuery, useMutation, useQuery } from 'react-query'
 import { loadRandomBookList } from '@apis/book'
 import styled from '@emotion/styled'
+import { ClipLoader } from 'react-spinners'
 
-const maxCheckedValue = 20
+const maxCheckedValue = 10
 
 const First = ({ me }: { me?: any }) => {
     const router = useRouter()
 
     const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
-        staleTime: 30 * 60 * 1000, // 단위 ms
-        refetchOnWindowFocus: false,
+        // staleTime: 30 * 60 * 1000, // 단위 ms
+        // refetchOnWindowFocus: false,
     })
 
-    const tmpSeed = Math.ceil(Math.random() * 100)
-    const { data: randomBooks } = useQuery(['ramdomBook'], () => loadRandomBookList(tmpSeed, 0, 99), {
-        staleTime: 30 * 60 * 1000, // 단위 ms
-        refetchOnWindowFocus: false,
-    })
+    let tmpSeed = Math.ceil(Math.random() * 100)
+
+    const {
+        data: randomBooks,
+        fetchNextPage,
+        refetch,
+    } = useInfiniteQuery(
+        ['first', 'ramdomBook'],
+        ({ pageParam = 0 }) => {
+            if (pageParam > 0) {
+                tmpSeed = Number(JSON.parse(sessionStorage.getItem('seed')!))
+            }
+            return loadRandomBookList(tmpSeed, 30 * pageParam, 30 * (pageParam + 1) - 1)
+        },
+        {
+            cacheTime: 10 * 60 * 1000, // 단위 ms
+            refetchOnWindowFocus: false,
+
+            //infinite
+            getNextPageParam: (lastPage, pages) => 1,
+        },
+    )
+
+    console.log('randomBooks')
+    console.log(randomBooks)
 
     const mutation = useMutation<Promise<any>, AxiosError, Array<{ isbn: string }>>(checkFirstBooks, {
         onMutate: () => {},
@@ -43,109 +64,159 @@ const First = ({ me }: { me?: any }) => {
     const [btnDisabled, setBtnDisabled] = useState(false)
 
     useEffect(() => {
+        function onScroll() {
+            if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 400) {
+                fetchNextPage().then((res) => {
+                    console.log(res.data)
+                })
+            }
+        }
+        window.addEventListener('scroll', onScroll)
+
+        return () => {
+            window.removeEventListener('scroll', onScroll)
+        }
+    }, [])
+
+    useEffect(() => {
+        // 상단 이동
+        window.onbeforeunload = function pushRefresh() {
+            window.scrollTo(0, 0)
+        }
+    }, [])
+
+    useEffect(() => {
         if (isFirst === false) {
             router.push('/')
         }
     }, [isFirst])
 
     return (
-        <AppLayout style={{ margin: '30px auto' }}>
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    userSelect: 'none',
-                    margin: '30px auto',
-                }}
-            >
-                <h1>관심 있는 도서를 선택해주세요</h1>
-            </div>
-
-            <ProgressContainer>
-                <Progress percent={Math.floor((count / maxCheckedValue) * 100)} />
-            </ProgressContainer>
-
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    userSelect: 'none',
-                    margin: '30px auto',
-                }}
-            >
-                {btnDisabled ? (
-                    <NextButton
-                        onClick={() => {
-                            // console.log(checked)
-                            // console.log('-=----=-=--=-')
-                            let checkedIsbnList = randomBooks
-                                ?.filter((v: any, i: number) => checked.includes(i))
-                                ?.map((v: any) => ({ isbn: v.isbn }))
-                            // console.log(checkedIsbnList)
-                            mutation.mutate(checkedIsbnList)
+        <>
+            {isFirst !== true ? (
+                <div
+                    style={{
+                        backgroundColor: '#e9ecef',
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <ClipLoader loading />
+                </div>
+            ) : (
+                <AppLayout style={{ margin: '30px auto' }} me={me}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            userSelect: 'none',
+                            margin: '30px auto',
                         }}
                     >
-                        보러 가기
-                    </NextButton>
-                ) : (
-                    <NextButton disabled>보러 가기</NextButton>
-                )}
-            </div>
+                        <h1>관심 있는 도서를 선택해주세요</h1>
+                    </div>
 
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: '10px 10px',
-                }}
-            >
-                <BooksContainer style={{ margin: '0 15px' }}>
-                    {randomBooks &&
-                        randomBooks instanceof Array &&
-                        randomBooks?.map((v: any, i: any) => (
-                            <>
-                                <div
-                                    key={v.imgUrl}
-                                    style={{
-                                        marginBottom: '50px',
-                                        display: 'flex',
-                                        justifyContent: 'center',
+                    <ProgressContainer>
+                        <Progress percent={Math.floor((count / maxCheckedValue) * 100)} />
+                    </ProgressContainer>
 
-                                        userSelect: 'none',
-                                        position: 'relative',
-                                    }}
-                                    onClick={() => {
-                                        if (checked.includes(i)) {
-                                            setChecked([...checked.filter((v) => v !== i)])
-                                            setCount((prev) => prev - 1)
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            userSelect: 'none',
+                            margin: '30px auto',
+                        }}
+                    >
+                        {btnDisabled ? (
+                            <NextButton
+                                onClick={() => {
+                                    console.log(checked)
+                                    // console.log('-=----=-=--=-')
 
-                                            setBtnDisabled(false)
-                                        } else if (count < maxCheckedValue) {
-                                            setChecked([...checked, i])
-                                            setCount((prev) => prev + 1)
+                                    let randomBooksIsbnList = randomBooks?.pages
+                                    let checkedIsbnList = randomBooks?.pages
+                                        ?.map((page) => page.map((v: any) => ({ isbn: v.isbn, tmpOrder: v.tmpOrder })))
+                                        .flat()
+                                        .filter((v: any) => checked.includes(v.tmpOrder))
+                                        .map((v: any) => ({ isbn: v.isbn }))
+                                    console.log(randomBooksIsbnList)
 
-                                            if (count + 1 == maxCheckedValue) {
-                                                setBtnDisabled(true)
-                                            }
-                                        }
-                                    }}
-                                >
-                                    <img
-                                        src={v.imgUrl}
-                                        width="150px"
-                                        key={v.imgUrl}
-                                        style={{
-                                            filter: checked.includes(i) ? 'brightness(50%)' : 'initial',
-                                            cursor: 'pointer',
-                                        }}
-                                    />
-                                </div>
-                            </>
-                        ))}
-                </BooksContainer>
-            </div>
-        </AppLayout>
+                                    mutation.mutate(checkedIsbnList)
+                                }}
+                            >
+                                보러 가기
+                            </NextButton>
+                        ) : (
+                            <NextButton disabled>보러 가기</NextButton>
+                        )}
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: '10px 10px',
+                        }}
+                    >
+                        <BooksContainer style={{ margin: '0 15px' }}>
+                            {randomBooks?.pages && randomBooks.pages instanceof Array
+                                ? randomBooks?.pages?.map((page) =>
+                                      page
+                                          ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
+                                          ?.map((v: any, i: any) => (
+                                              <>
+                                                  <div
+                                                      key={v.imgUrl}
+                                                      style={{
+                                                          marginBottom: '50px',
+                                                          display: 'flex',
+                                                          justifyContent: 'center',
+
+                                                          userSelect: 'none',
+                                                          position: 'relative',
+                                                      }}
+                                                      onClick={() => {
+                                                          if (checked.includes(v.tmpOrder)) {
+                                                              setChecked([...checked.filter((t) => t !== v.tmpOrder)])
+                                                              setCount((prev) => prev - 1)
+
+                                                              setBtnDisabled(false)
+                                                          } else if (count < maxCheckedValue) {
+                                                              setChecked([...checked, v.tmpOrder])
+                                                              setCount((prev) => prev + 1)
+
+                                                              if (count + 1 == maxCheckedValue) {
+                                                                  setBtnDisabled(true)
+                                                              }
+                                                          }
+                                                      }}
+                                                  >
+                                                      <img
+                                                          src={v.imgUrl}
+                                                          width="150px"
+                                                          key={v.imgUrl}
+                                                          style={{
+                                                              filter: checked.includes(v.tmpOrder)
+                                                                  ? 'brightness(50%)'
+                                                                  : 'initial',
+                                                              cursor: 'pointer',
+                                                          }}
+                                                      />
+                                                  </div>
+                                              </>
+                                          )),
+                                  )
+                                : null}
+                        </BooksContainer>
+                    </div>
+                </AppLayout>
+            )}
+        </>
     )
 }
 
