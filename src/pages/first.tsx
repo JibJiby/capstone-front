@@ -16,7 +16,7 @@ import styled from '@emotion/styled'
 
 const maxCheckedValue = 20
 
-const First = ({ err }: { err: any }) => {
+const First = () => {
     const router = useRouter()
 
     const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
@@ -33,8 +33,8 @@ const First = ({ err }: { err: any }) => {
     const mutation = useMutation<Promise<any>, AxiosError, Array<{ isbn: string }>>(checkFirstBooks, {
         onMutate: () => {},
         onSuccess: () => {
-            message.info('선호 도서을 충분히 선택하셨습니다!')
             router.push('/')
+            message.info('선호 도서을 충분히 선택하셨습니다!')
         },
     })
 
@@ -177,10 +177,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             props: {},
         }
     } catch (err: any) {
-        let statusCode = err.response.status
-        console.log('loadMyInfo Error')
-        console.log(statusCode)
-
         // if (statusCode === 401) {
         //     return {
         //         redirect: {
@@ -188,12 +184,9 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         //         },
         //     }
         // }
-
-        // 이외의 케이스
-        console.error(statusCode)
         return {
             //
-            props: { err },
+            props: {},
         }
     }
 }
