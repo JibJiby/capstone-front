@@ -20,6 +20,10 @@ const maxCheckedValue = 10
 const First = ({ me }: { me?: any }) => {
     const router = useRouter()
 
+    const { data: headerMe } = useQuery('user', loadMyInfoAPI, {
+        // staleTime: 30 * 1000, // ms
+    })
+
     const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
         // staleTime: 30 * 60 * 1000, // 단위 ms
         // refetchOnWindowFocus: false,
@@ -96,7 +100,7 @@ const First = ({ me }: { me?: any }) => {
 
     return (
         <>
-            {isFirst !== true ? (
+            {isFirst !== true || !headerMe ? (
                 <div
                     style={{
                         backgroundColor: '#e9ecef',
