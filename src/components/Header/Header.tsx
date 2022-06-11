@@ -99,7 +99,7 @@ function Header({ me }: { me?: any }) {
                     >
                         베스트셀러
                     </div> */}
-                    {!me || !headerMe ? (
+                    {!me && !headerMe ? (
                         <LogInOutButton
                             onClick={() => {
                                 router.push('/login')
