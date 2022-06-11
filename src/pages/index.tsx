@@ -174,11 +174,13 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
         if (sessionCookie) {
             console.log('session 쿠키 있으니까 그대로.')
+            console.log(sessionCookie)
             return {
                 props: {},
             }
         } else {
             console.log('없어서 about 페이지로 이동.')
+            console.log(sessionCookie)
             return {
                 redirect: {
                     destination: '/about',
