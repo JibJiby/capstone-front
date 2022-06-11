@@ -137,15 +137,15 @@ const First = ({ me }: { me?: any }) => {
                                     console.log(checked)
                                     // console.log('-=----=-=--=-')
 
-                                    let randomBooksIsbnList = randomBooks?.pages
+                                    // let randomBooksIsbnList = randomBooks?.pages
                                     let checkedIsbnList = randomBooks?.pages
                                         ?.map((page) => page.map((v: any) => ({ isbn: v.isbn, tmpOrder: v.tmpOrder })))
                                         .flat()
                                         .filter((v: any) => checked.includes(v.tmpOrder))
                                         .map((v: any) => ({ isbn: v.isbn }))
-                                    console.log(randomBooksIsbnList)
+                                    // console.log(checkedIsbnList)
 
-                                    mutation.mutate(checkedIsbnList)
+                                    mutation.mutate(checkedIsbnList!)
                                 }}
                             >
                                 보러 가기
