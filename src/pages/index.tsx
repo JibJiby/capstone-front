@@ -147,6 +147,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         ?.split(';')
         .map((v) => v.trim())
         .filter((v) => v.split('=')[0] === 'session')
+        .at(0)
 
     try {
         console.log('~~~~~~~~~~DATA~~~~~~~~~~')
