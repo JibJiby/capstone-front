@@ -95,7 +95,7 @@ const Home = () => {
                             {randomBooks?.pages?.map((page) =>
                                 page
                                     ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
-                                    .map((v: any, i: any) => (
+                                    ?.map((v: any, i: any) => (
                                         <>
                                             <div
                                                 key={v.imgUrl}
