@@ -17,6 +17,8 @@ function Header({ me }: { me?: any }) {
     })
     console.log('헤더 data')
     console.log(headerMe)
+    console.log('!me || !headerMe')
+    console.log(!me || !headerMe)
 
     const [loading, setLoading] = useState(false)
 
