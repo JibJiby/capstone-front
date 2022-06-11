@@ -16,7 +16,7 @@ import styled from '@emotion/styled'
 
 const maxCheckedValue = 20
 
-const First = () => {
+const First = ({ me }: { me?: any }) => {
     const router = useRouter()
 
     const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
@@ -174,7 +174,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         }
 
         return {
-            props: {},
+            props: { me: data },
         }
     } catch (err: any) {
         // if (statusCode === 401) {

@@ -1,13 +1,16 @@
 import { loadMyCheckedBookList } from '@apis/book'
+import { loadMyInfoAPI } from '@apis/user'
 import AppLayout from '@components/AppLayout'
 import BooksContainer from '@components/BooksContainer'
 import styled from '@emotion/styled'
 import { Button } from 'antd'
+import axios from 'axios'
+import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect } from 'react'
 import { useQuery } from 'react-query'
 
-function MyInfo() {
+function MyInfo({ me }: { me?: any }) {
     const router = useRouter()
 
     const { data: myBooks } = useQuery(['myBooks'], loadMyCheckedBookList, {
@@ -20,7 +23,7 @@ function MyInfo() {
     useEffect(() => {}, [])
 
     return (
-        <AppLayout>
+        <AppLayout me={me}>
             {/* <div style={{ marginLeft: '130px' }}>
                 <div>
                     <h3>나의 정보</h3>
@@ -82,6 +85,26 @@ function MyInfo() {
 }
 
 export default MyInfo
+
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+    const cookie = context.req ? context.req.headers.cookie : ''
+    axios.defaults.headers.common.cookie = ''
+    if (context.req && cookie) {
+        axios.defaults.headers.common.cookie = cookie
+    }
+
+    try {
+        const data = await loadMyInfoAPI() // 401 에러
+
+        return {
+            props: { me: data },
+        }
+    } catch (err: any) {
+        return {
+            props: {},
+        }
+    }
+}
 
 const EditingMyInfoButton = styled.button`
     /* padding: '10px 15px', borderRadius: '8px', border: 'none' */

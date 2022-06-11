@@ -8,13 +8,15 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import { LogInOutButton } from './styles'
 
-function Header() {
+function Header({ me }: { me?: any }) {
     const router = useRouter()
     const queryClient = useQueryClient()
 
-    const { data: me, refetch } = useQuery('user', loadMyInfoAPI, {
-        // staleTime: 30 * 60 * 1000, // ms
-    })
+    // const { data: me, refetch } = useQuery('user', loadMyInfoAPI, {
+    //     // staleTime: 30 * 1000, // ms
+    // })
+    // console.log('헤더 data')
+    // console.log(me)
 
     const [loading, setLoading] = useState(false)
 
@@ -38,9 +40,9 @@ function Header() {
         mutation.mutate()
     }, [mutation])
 
-    useEffect(() => {
-        refetch()
-    }, [])
+    // useEffect(() => {
+    //     refetch()
+    // }, [])
 
     return (
         <div

@@ -6,12 +6,13 @@ import { contentStyle } from './styles'
 interface Props {
     children: React.ReactNode
     style?: CSSProperties | undefined
+    me?: any
 }
 
-const AppLayout = ({ children, style }: Props) => {
+const AppLayout = ({ children, style, me }: Props) => {
     return (
         <>
-            <Header />
+            <Header me={me} />
             <div style={{ height: '60px' }}></div>
             <div style={style}>{children}</div>
         </>

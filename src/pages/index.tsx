@@ -7,12 +7,12 @@ import BooksContainer from '@components/BooksContainer'
 import axios, { AxiosError } from 'axios'
 import { loadMyInfoAPI } from '@apis/user'
 import { loadRandomBookList } from '@apis/book'
-import { QueryClient, useInfiniteQuery, useQuery } from 'react-query'
+import { QueryClient, useInfiniteQuery, useQuery, useQueryClient } from 'react-query'
 import styled from '@emotion/styled'
 import { isFirstAPI } from '@apis/likeslog'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-const Home = () => {
+const Home = ({ me }: { me?: any }) => {
     const router = useRouter()
 
     let tmpSeed = Math.ceil(Math.random() * 100)
@@ -85,7 +85,7 @@ const Home = () => {
                     <ClipLoader loading />
                 </div> */}
 
-            <AppLayout>
+            <AppLayout me={me}>
                 <div>
                     <ContainerHeader>
                         <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
@@ -156,7 +156,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
         if (data) {
             return {
-                props: {},
+                props: { me: data },
             }
         }
         return {
