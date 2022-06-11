@@ -25,6 +25,9 @@ const First = ({ me }: { me?: any }) => {
         // refetchOnWindowFocus: false,
     })
 
+    console.log('me')
+    console.log(me)
+
     let tmpSeed = Math.ceil(Math.random() * 100)
 
     const {
