@@ -15,8 +15,8 @@ function Header({ me }: { me?: any }) {
     const { data: headerMe, refetch } = useQuery('user', loadMyInfoAPI, {
         // staleTime: 30 * 1000, // ms
     })
-    // console.log('헤더 data')
-    // console.log(me)
+    console.log('헤더 data')
+    console.log(headerMe)
 
     const [loading, setLoading] = useState(false)
 
