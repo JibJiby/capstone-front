@@ -101,46 +101,48 @@ const First = ({ me }: { me?: any }) => {
                 }}
             >
                 <BooksContainer style={{ margin: '0 15px' }}>
-                    {randomBooks?.map((v: any, i: any) => (
-                        <>
-                            <div
-                                key={v.imgUrl}
-                                style={{
-                                    marginBottom: '50px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-
-                                    userSelect: 'none',
-                                    position: 'relative',
-                                }}
-                                onClick={() => {
-                                    if (checked.includes(i)) {
-                                        setChecked([...checked.filter((v) => v !== i)])
-                                        setCount((prev) => prev - 1)
-
-                                        setBtnDisabled(false)
-                                    } else if (count < maxCheckedValue) {
-                                        setChecked([...checked, i])
-                                        setCount((prev) => prev + 1)
-
-                                        if (count + 1 == maxCheckedValue) {
-                                            setBtnDisabled(true)
-                                        }
-                                    }
-                                }}
-                            >
-                                <img
-                                    src={v.imgUrl}
-                                    width="150px"
+                    {randomBooks &&
+                        randomBooks instanceof Array &&
+                        randomBooks?.map((v: any, i: any) => (
+                            <>
+                                <div
                                     key={v.imgUrl}
                                     style={{
-                                        filter: checked.includes(i) ? 'brightness(50%)' : 'initial',
-                                        cursor: 'pointer',
+                                        marginBottom: '50px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+
+                                        userSelect: 'none',
+                                        position: 'relative',
                                     }}
-                                />
-                            </div>
-                        </>
-                    ))}
+                                    onClick={() => {
+                                        if (checked.includes(i)) {
+                                            setChecked([...checked.filter((v) => v !== i)])
+                                            setCount((prev) => prev - 1)
+
+                                            setBtnDisabled(false)
+                                        } else if (count < maxCheckedValue) {
+                                            setChecked([...checked, i])
+                                            setCount((prev) => prev + 1)
+
+                                            if (count + 1 == maxCheckedValue) {
+                                                setBtnDisabled(true)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    <img
+                                        src={v.imgUrl}
+                                        width="150px"
+                                        key={v.imgUrl}
+                                        style={{
+                                            filter: checked.includes(i) ? 'brightness(50%)' : 'initial',
+                                            cursor: 'pointer',
+                                        }}
+                                    />
+                                </div>
+                            </>
+                        ))}
                 </BooksContainer>
             </div>
         </AppLayout>
