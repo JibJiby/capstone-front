@@ -183,14 +183,14 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     const cookie = context.req ? context.req.headers.cookie : ''
     axios.defaults.headers.common.cookie = ''
     if (context.req && cookie) {
-        console.log('쿠키 장착...')
+        console.log('쿠키 장착...') // o
         axios.defaults.headers.common.cookie = cookie
     }
 
     try {
         console.log('서버 사이드 user 정보 가져오기')
-        // const data = await loadMyInfoAPI()
-        const { data } = await axios.get('/user', { withCredentials: true })
+        const data = await loadMyInfoAPI()
+        // const { data } = await axios.get('/user', { withCredentials: true })  // 이것도 에러. 여기서 문제. 왜 401에러가 뜨는가...
         console.log(data)
         console.log('------------------------------------')
 

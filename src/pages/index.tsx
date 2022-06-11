@@ -168,11 +168,17 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         // console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
         // console.error(err)
 
-        return {
-            redirect: {
-                destination: '/about',
-                permanent: false,
-            },
+        if (cookie) {
+            return {
+                props: {},
+            }
+        } else {
+            return {
+                redirect: {
+                    destination: '/about',
+                    permanent: false,
+                },
+            }
         }
     }
 }
