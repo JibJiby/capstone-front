@@ -12,9 +12,9 @@ function Header({ me }: { me?: any }) {
     const router = useRouter()
     const queryClient = useQueryClient()
 
-    // const { data: me, refetch } = useQuery('user', loadMyInfoAPI, {
-    //     // staleTime: 30 * 1000, // ms
-    // })
+    const { data: headerMe, refetch } = useQuery('user', loadMyInfoAPI, {
+        // staleTime: 30 * 1000, // ms
+    })
     // console.log('헤더 data')
     // console.log(me)
 
@@ -97,7 +97,7 @@ function Header({ me }: { me?: any }) {
                     >
                         베스트셀러
                     </div> */}
-                    {!me ? (
+                    {!me || headerMe ? (
                         <LogInOutButton
                             onClick={() => {
                                 router.push('/login')
