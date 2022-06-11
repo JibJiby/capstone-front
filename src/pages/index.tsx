@@ -143,6 +143,10 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
     console.log('cookie')
     console.log(cookie)
+    const sessionCookie = cookie
+        ?.split(';')
+        .map((v) => v.trim())
+        .filter((v) => v.split('=')[0] === 'session')
 
     try {
         console.log('~~~~~~~~~~DATA~~~~~~~~~~')
@@ -168,11 +172,13 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         // console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
         // console.error(err)
 
-        if (cookie) {
+        if (sessionCookie) {
+            console.log('session 쿠키 있으니까 그대로.')
             return {
                 props: {},
             }
         } else {
+            console.log('없어서 about 페이지로 이동.')
             return {
                 redirect: {
                     destination: '/about',
