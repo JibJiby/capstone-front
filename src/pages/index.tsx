@@ -92,36 +92,38 @@ const Home = ({ me }: { me?: any }) => {
                     </ContainerHeader>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <BooksContainer style={{ margin: '0 15px' }}>
-                            {randomBooks?.pages?.map((page) =>
-                                page
-                                    ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
-                                    ?.map((v: any, i: any) => (
-                                        <>
-                                            <div
-                                                key={v.imgUrl}
-                                                style={{
-                                                    marginBottom: '50px',
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
+                            {randomBooks?.pages && randomBooks?.pages instanceof Array
+                                ? randomBooks?.pages?.map((page) =>
+                                      page
+                                          ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
+                                          ?.map((v: any, i: any) => (
+                                              <>
+                                                  <div
+                                                      key={v.imgUrl}
+                                                      style={{
+                                                          marginBottom: '50px',
+                                                          display: 'flex',
+                                                          justifyContent: 'center',
 
-                                                    userSelect: 'none',
-                                                    position: 'relative',
-                                                }}
-                                            >
-                                                <img
-                                                    src={v.imgUrl}
-                                                    width="150px"
-                                                    key={v.imgUrl}
-                                                    style={{ cursor: 'pointer' }}
-                                                    onClick={() => {
-                                                        console.log(v)
-                                                        router.push(`/book/${v.isbn}`)
-                                                    }}
-                                                />
-                                            </div>
-                                        </>
-                                    )),
-                            )}
+                                                          userSelect: 'none',
+                                                          position: 'relative',
+                                                      }}
+                                                  >
+                                                      <img
+                                                          src={v.imgUrl}
+                                                          width="150px"
+                                                          key={v.imgUrl}
+                                                          style={{ cursor: 'pointer' }}
+                                                          onClick={() => {
+                                                              console.log(v)
+                                                              router.push(`/book/${v.isbn}`)
+                                                          }}
+                                                      />
+                                                  </div>
+                                              </>
+                                          )),
+                                  )
+                                : null}
                         </BooksContainer>
                     </div>
                 </div>
