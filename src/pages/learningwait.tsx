@@ -1,17 +1,20 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import ClipLoader from 'react-spinners/ClipLoader'
-import { setTimeout } from 'timers'
+import { useEffect } from 'react'
+import { ClipLoader } from 'react-spinners'
 
-const Learning = () => {
+
+const LearningWaiting = () => {
     const router = useRouter()
 
     useEffect(() => {
-        // setTmpLoadedContent(true)
-
-        setTimeout(() => {
-            router.push('/')
-        }, 10 * 1000)
+        // let curTime = Date.now()
+        // console.log('시작!')
+        // while (true) {
+        //     if (Date.now() > curTime + 10 * 1000) {
+        //         break
+        //     }
+        // }
+        // console.log('끝')
     }, [])
 
     return (
@@ -30,5 +33,3 @@ const Learning = () => {
         </div>
     )
 }
-
-export default Learning
