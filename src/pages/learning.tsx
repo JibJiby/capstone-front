@@ -11,7 +11,7 @@ const Learning = () => {
 
         setTimeout(() => {
             router.push('/')
-        }, 10 * 1000)
+        }, 15 * 1000)
     }, [])
 
     return (
