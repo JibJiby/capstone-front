@@ -1,22 +1,33 @@
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ClipLoader from 'react-spinners/ClipLoader'
+
+function loadSpinner() {
+    let curTime = Date.now()
+    console.log('시작!')
+    while (true) {
+        if (Date.now() > curTime + 10 * 1000) {
+            break
+        }
+    }
+    console.log('끝')
+}
 
 const Learning = () => {
     const router = useRouter()
 
-    useEffect(() => {
-        let curTime = Date.now()
-        console.log('시작!')
-        while (true) {
-            if (Date.now() > curTime + 10 * 1000) {
-                break
-            }
-        }
-        console.log('끝')
+    const [tmpLoadedContent, setTmpLoadedContent] = useState(false)
 
-        router.push('/')
+    useEffect(() => {
+        setTmpLoadedContent(true)
     }, [])
+
+    useEffect(() => {
+        if (tmpLoadedContent) {
+            loadSpinner()
+            router.push('/')
+        }
+    }, [tmpLoadedContent])
 
     return (
         <div
