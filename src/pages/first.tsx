@@ -61,7 +61,7 @@ const First = ({ me }: { me?: any }) => {
     const mutation = useMutation<Promise<any>, AxiosError, Array<{ isbn: string }>>(checkFirstBooks, {
         onMutate: () => {},
         onSuccess: () => {
-            router.push('/')
+            router.push('/learning')
             message.info('선호 도서을 충분히 선택하셨습니다!')
         },
     })
