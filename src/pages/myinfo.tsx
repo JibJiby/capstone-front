@@ -20,11 +20,9 @@ function MyInfo({ me }: { me?: any }) {
 
     // const onBookImageClick = useCallback(() => {}, [])
 
-    useEffect(() => {}, [])
-
     return (
-        <AppLayout me={me}>
-            {/* <div style={{ marginLeft: '130px' }}>
+        <AppLayout me={me} style={{ margin: '0 15px' }}>
+            <div style={{ marginLeft: '130px', marginTop: '30px' }}>
                 <div>
                     <h3>나의 정보</h3>
                 </div>
@@ -38,7 +36,7 @@ function MyInfo({ me }: { me?: any }) {
                         수정하러 가기
                     </EditingMyInfoButton>
                 </div>
-            </div> */}
+            </div>
 
             <div
                 style={{
@@ -51,7 +49,7 @@ function MyInfo({ me }: { me?: any }) {
                 <h2>내가 찜한 도서들</h2>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <BooksContainer style={{ margin: '0 15px' }}>
+                <BooksContainer>
                     {myBooks?.map((v: any, i: any) => (
                         <>
                             <div

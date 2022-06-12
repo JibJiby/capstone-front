@@ -7,7 +7,6 @@ const Learning = () => {
     const router = useRouter()
 
     useEffect(() => {
-        // setTmpLoadedContent(true)
 
         setTimeout(() => {
             router.push('/')
