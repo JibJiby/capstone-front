@@ -12,14 +12,12 @@ import 'antd/lib/date-picker/style/index.css'
 
 const EditMyInfo = () => {
     const [bookDate, setBookDate] = useState(moment())
-    const [bookDateOpen, setBookDateOpen] = useState(false)
 
     const { data: headerMe } = useQuery('user', loadMyInfoAPI, {})
 
     const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
         if (date) {
             setBookDate(date)
-            setBookDateOpen(true)
         }
     }
 
@@ -56,7 +54,7 @@ const EditMyInfo = () => {
                         <DatePicker
                             size="large"
                             style={{ marginTop: '10px' }}
-                            // onChange={onDateChange}
+                            onChange={onDateChange}
                             value={bookDate}
                         />
                     </div>
