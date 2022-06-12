@@ -37,6 +37,7 @@ const First = ({ me }: { me?: any }) => {
     const {
         data: randomBooks,
         fetchNextPage,
+        isLoading,
         refetch,
     } = useInfiniteQuery(
         ['first', 'ramdomBook'],
@@ -51,7 +52,13 @@ const First = ({ me }: { me?: any }) => {
             refetchOnWindowFocus: false,
 
             //infinite
-            getNextPageParam: (lastPage, pages) => 1,
+            getNextPageParam: (lastPage, pages) => {
+                console.log('getNextPageParam')
+                console.log(lastPage)
+                console.log(pages)
+
+                return pages.length
+            },
         },
     )
 
@@ -73,9 +80,11 @@ const First = ({ me }: { me?: any }) => {
     useEffect(() => {
         function onScroll() {
             if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 400) {
-                fetchNextPage().then((res) => {
-                    console.log(res.data)
-                })
+                if(!isLoading) {
+                    fetchNextPage().then((res) => {
+                        console.log(res.data)
+                    })
+                }
             }
         }
         window.addEventListener('scroll', onScroll)
@@ -83,13 +92,15 @@ const First = ({ me }: { me?: any }) => {
         return () => {
             window.removeEventListener('scroll', onScroll)
         }
-    }, [])
+    }, [isLoading])
 
     useEffect(() => {
         // 상단 이동
         window.onbeforeunload = function pushRefresh() {
             window.scrollTo(0, 0)
         }
+
+        sessionStorage.setItem('seed', JSON.stringify(tmpSeed))
     }, [])
 
     useEffect(() => {
