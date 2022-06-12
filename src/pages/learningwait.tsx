@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { ClipLoader } from 'react-spinners'
 
-
 const LearningWaiting = () => {
     const router = useRouter()
 
@@ -33,3 +32,5 @@ const LearningWaiting = () => {
         </div>
     )
 }
+
+export default LearningWaiting
