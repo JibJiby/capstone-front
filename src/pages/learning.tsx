@@ -9,7 +9,7 @@ const Learning = () => {
     useEffect(() => {
         setTimeout(() => {
             router.push('/')
-        }, 20 * 1000)
+        }, 30 * 1000)
     }, [])
 
     return (
@@ -19,12 +19,14 @@ const Learning = () => {
                 width: '100%',
                 height: '100%',
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
             }}
         >
             <ClipLoader loading />
-            {'  '}모델 학습중입니다...
+            <div>추천할 만한 도서를 고르는 중입니다...</div>
+            <div style={{fontWeight: 'bold'}}>조금만 기다려주세요!!!</div>
         </div>
     )
 }
