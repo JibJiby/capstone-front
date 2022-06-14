@@ -34,7 +34,13 @@ const Home = ({ me }: { me?: any }) => {
             refetchOnWindowFocus: false,
 
             //infinite
-            getNextPageParam: (lastPage, pages) => 1,
+            getNextPageParam: (lastPage, pages) => {
+                console.log('getNextPageParam')
+                console.log(lastPage)
+                console.log(pages)
+
+                return pages.length
+            },
         },
     )
     const { data: isFirst } = useQuery('isfirst', isFirstAPI, {

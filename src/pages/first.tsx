@@ -80,7 +80,7 @@ const First = ({ me }: { me?: any }) => {
     useEffect(() => {
         function onScroll() {
             if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 400) {
-                if(!isLoading) {
+                if (!isLoading) {
                     fetchNextPage().then((res) => {
                         console.log(res.data)
                     })
