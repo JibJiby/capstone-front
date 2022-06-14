@@ -7,10 +7,9 @@ const Learning = () => {
     const router = useRouter()
 
     useEffect(() => {
-
         setTimeout(() => {
             router.push('/')
-        }, 15 * 1000)
+        }, 10 * 1000)
     }, [])
 
     return (
