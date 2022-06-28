@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { AboutPageLoginButton as LoginButton, AboutPageContainer as Container } from './style'
