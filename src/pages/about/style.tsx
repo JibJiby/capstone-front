@@ -63,4 +63,10 @@ export const AboutPageContainer = styled.div`
         justify-content: center;
         user-select: none;
     }
+
+    @media (max-width: 630px) {
+        h1 {
+            font-size: 1.8em;
+        }
+    }
 `
