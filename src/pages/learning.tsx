@@ -13,7 +13,7 @@ const Learning = () => {
     }, [])
 
     return (
-        <div
+        <section
             style={{
                 backgroundColor: '#e9ecef',
                 width: '100%',
@@ -25,9 +25,11 @@ const Learning = () => {
             }}
         >
             <ClipLoader loading />
-            <div>추천할 만한 도서를 고르는 중입니다...</div>
-            <div style={{ fontWeight: 'bold' }}>고장나지 않았어요^^ 조금만 기다려주세요!!!</div>
-        </div>
+            <header>추천할 만한 도서를 고르는 중입니다...</header>
+            <section style={{ fontWeight: 'bold' }}>
+                고장나지 않았어요^^ 조금만 기다려주세요!!!
+            </section>
+        </section>
     )
 }
 
