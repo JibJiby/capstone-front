@@ -1,59 +1,56 @@
 import type { GetServerSidePropsContext, NextPage } from 'next'
-import AppLayout from '@components/AppLayout'
 import { useRouter } from 'next/router'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
+import { useInfiniteQuery, useQuery } from 'react-query'
+import ClipLoader from 'react-spinners/ClipLoader'
+
+import AppLayout from '@components/AppLayout'
 import BackTop from '@components/BackTop'
 import BooksContainer from '@components/BooksContainer'
 import axios, { AxiosError } from 'axios'
 import { loadMyInfoAPI } from '@apis/user'
 import { loadRandomBookList } from '@apis/book'
-import { QueryClient, useInfiniteQuery, useQuery, useQueryClient } from 'react-query'
-import styled from '@emotion/styled'
 import { isFirstAPI } from '@apis/likeslog'
-import ClipLoader from 'react-spinners/ClipLoader'
+import {
+    bookImageContainerStyle,
+    bookImageStyle,
+    ContainerHeader,
+    FullLoadingBackground,
+} from '../styles/indexPageStyle'
 
 const Home = ({ me }: { me?: any }) => {
-    const router = useRouter()
-
-    const { data: headerMe } = useQuery('user', loadMyInfoAPI, {
-        // staleTime: 30 * 1000, // ms
-    })
-
     let tmpSeed = Math.ceil(Math.random() * 100)
-
+    const router = useRouter()
+    const { data: isFirst } = useQuery('isfirst', isFirstAPI)
+    const { data: headerMe } = useQuery('user', loadMyInfoAPI)
     const { data: randomBooks, fetchNextPage } = useInfiniteQuery(
         ['ramdomBook'],
         ({ pageParam = 0 }) => {
             if (pageParam > 0) {
                 tmpSeed = Number(JSON.parse(sessionStorage.getItem('seed')!))
             }
-            return loadRandomBookList(tmpSeed, 30 * pageParam, 30 * (pageParam + 1) - 1)
+            return loadRandomBookList(
+                tmpSeed,
+                30 * pageParam,
+                30 * (pageParam + 1) - 1,
+            )
         },
         {
             cacheTime: 10 * 60 * 1000, // 단위 ms
             refetchOnWindowFocus: false,
 
             //infinite
-            getNextPageParam: (lastPage, pages) => {
-                console.log('getNextPageParam')
-                console.log(lastPage)
-                console.log(pages)
-
-                return pages.length
-            },
+            getNextPageParam: (lastPage, pages) => pages.length,
         },
     )
-    const { data: isFirst } = useQuery('isfirst', isFirstAPI, {
-        // staleTime: 30 * 60 * 1000, // 단위 ms
-        // refetchOnWindowFocus: false,
-    })
 
     useEffect(() => {
         function onScroll() {
-            if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 400) {
-                fetchNextPage().then((res) => {
-                    console.log(res.data)
-                })
+            if (
+                window.scrollY + document.documentElement.clientHeight >
+                document.documentElement.scrollHeight - 400
+            ) {
+                fetchNextPage()
             }
         }
         window.addEventListener('scroll', onScroll)
@@ -73,8 +70,7 @@ const Home = ({ me }: { me?: any }) => {
     }, [])
 
     useEffect(() => {
-        console.log('][][][][][][]][][]isFirst][]][][][][][][][][]][]')
-        console.log(isFirst)
+        console.log('isFirst  :: ', isFirst) // (처음)undefined -> (두번째)true
         if (isFirst === true) {
             router.push('/first')
         }
@@ -83,61 +79,53 @@ const Home = ({ me }: { me?: any }) => {
     return (
         <>
             {isFirst !== false || !headerMe ? (
-                <div
-                    style={{
-                        backgroundColor: '#e9ecef',
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                >
+                <FullLoadingBackground>
                     <ClipLoader loading />
-                </div>
+                </FullLoadingBackground>
             ) : (
                 <AppLayout me={me}>
-                    <div>
+                    <section>
                         <ContainerHeader>
                             <h1>유저님이 좋아하실 책들을 추천합니다.</h1>
                         </ContainerHeader>
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                            }}
+                        >
                             <BooksContainer style={{ margin: '0 15px' }}>
-                                {randomBooks?.pages && randomBooks?.pages instanceof Array
+                                {randomBooks?.pages &&
+                                randomBooks?.pages instanceof Array
                                     ? randomBooks?.pages?.map((page) =>
                                           page
-                                              ?.sort((a: any, b: any) => a.tmpOrder - b.tmpOrder)
-                                              ?.map((v: any, i: any) => (
-                                                  <>
-                                                      <div
+                                              ?.sort(sortByOrder)
+                                              ?.map((v: any) => (
+                                                  <div
+                                                      key={v.imgUrl}
+                                                      css={
+                                                          bookImageContainerStyle
+                                                      }
+                                                  >
+                                                      <img
+                                                          src={v.imgUrl}
+                                                          width="150px"
                                                           key={v.imgUrl}
-                                                          style={{
-                                                              marginBottom: '50px',
-                                                              display: 'flex',
-                                                              justifyContent: 'center',
-
-                                                              userSelect: 'none',
-                                                              position: 'relative',
+                                                          css={bookImageStyle}
+                                                          onClick={() => {
+                                                              console.log(v)
+                                                              router.push(
+                                                                  `/book/${v.isbn}`,
+                                                              )
                                                           }}
-                                                      >
-                                                          <img
-                                                              src={v.imgUrl}
-                                                              width="150px"
-                                                              key={v.imgUrl}
-                                                              style={{ cursor: 'pointer' }}
-                                                              onClick={() => {
-                                                                  console.log(v)
-                                                                  router.push(`/book/${v.isbn}`)
-                                                              }}
-                                                          />
-                                                      </div>
-                                                  </>
+                                                      />
+                                                  </div>
                                               )),
                                       )
                                     : null}
                             </BooksContainer>
                         </div>
-                    </div>
+                    </section>
                 </AppLayout>
             )}
 
@@ -148,7 +136,9 @@ const Home = ({ me }: { me?: any }) => {
 
 export default Home
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = async (
+    context: GetServerSidePropsContext,
+) => {
     const cookie = context.req ? context.req.headers.cookie : ''
     axios.defaults.headers.common.cookie = ''
     if (context.req && cookie) {
@@ -206,19 +196,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 }
 
-const ContainerHeader = styled.div`
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-    margin-bottom: 45px;
-
-    h1 {
-        /* fontWeight: 'bold' */
-        font-weight: bold;
-
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-    }
-`
+function sortByOrder(a: any, b: any) {
+    return a.tmpOrder - b.tmpOrder
+}
